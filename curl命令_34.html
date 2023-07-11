@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>curl命令[34] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="上传,下载," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-07-05
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    curl命令[34]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><code>curl</code>是一个可以使用多种协议(<code>DICT</code>、 <code>FILE</code>、 <code>FTP</code>、 <code>FTPS</code>、 <code>GOPHER</code>、 <code>HTTP</code>、 <code>HTTPS</code>、 <code>IMAP</code>、 <code>IMAPS</code>、 <code>LDAP</code>、 <code>LDAPS</code>、 <code>POP3</code>、 <code>POP3S</code>、 <code>RTMP</code>、 <code>RTSP</code>、 <code>SCP</code>、<code>SFTP</code>、 <code>SMTP</code>、 <code>SMTPS</code>、 <code>TELNET</code>、 <code>TFTP</code>)，通过服务器上传或下载的无用户交互工具。它提供了<code>代理</code>、<code>用户认证</code>、<code>HTTP POST</code>、<code>SSL连接</code>、<code>cookie</code>、<code>断点续传</code>等有用的功能。</p>
+</blockquote>
+<h4 id="URL语法"><a href="#URL语法" class="headerlink" title="URL语法"></a>URL语法</h4><p>URL语法依赖于协议的。支持设置多个URL，并且会依次去请求。</p>
+<ul>
+<li>使用花括号指定多个URL<br><code>http://site.&#123;one,two,three&#125;.com</code></li>
+<li><p>使用中括号获取字线或数字序列<br><code>ftp://ftp.numericals.com/file[1-100].txt</code><br><code>ftp://ftp.numericals.com/file[001-100].txt</code><br><code>ftp://ftp.letters.com/file[a-z].txt</code></p>
+<p>URL语法不支持嵌套序列，但可以相邻使用序列：<br><code>http://any.org/archive[1996-1999]/vol[1-4]/part&#123;a,b,c&#125;.html</code></p>
+</li>
+<li>使用步计数器获取每N个数字或字母<br>　<code>http://www.numericals.com/file[1-100:10].txt</code><br>　<code>http://www.letters.com/file[a-z:2].txt</code></li>
+</ul>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">-# : 显示当前状态的进度条</span><br><span class="line">-(0-6) : 强制curl使用某种形式访问URL，如-0表示http1.0，-4表示ipv4</span><br><span class="line">-A : 指定http请求的User-Agent</span><br><span class="line">-b : 发送cookie数据到服务器，数据格式为：&quot;NAME1=VALUE1; NAME2=VALUE2&quot;；</span><br><span class="line">-c &lt;file&gt; : 存储服务器返回的cookie到指定文件，&quot;-&quot;表示输出到标准输出</span><br><span class="line">-C &lt;offset&gt; : 断点续转，从文件头的指定位置开始继续下载/上传；offset续传开始的位置，如果offset值为“-”，curl会自动从文件中识别起始位置开始传输</span><br><span class="line">-d &lt;data&gt; : 使用 POST 请求方式发送数据到 HTTP 服务器，默认相当于浏览器表单属性（method=&quot;POST&quot;，enctype=&quot;application/x-www-form-urlencoded&quot;），</span><br><span class="line">            可以通过 -H 选项改变数据类型。</span><br><span class="line"></span><br><span class="line">            数据格式：&quot;NAME1=VALUE1&amp;NAME2=VALUE2&quot;</span><br><span class="line"></span><br><span class="line">            如果 data 以 @ 开头，则后面应该是读取数据的文件名或者 - ，表示从文件或者 stdin 中读取数据。</span><br><span class="line">            文件中的数据必须是被 URL 编码的，且允许指定多个文件。如读取 test.txt 文件可写成` -d @test.txt`。</span><br><span class="line">-D &lt;file&gt; : 存储http头到指定文件</span><br><span class="line">-X &lt;command&gt; : 指定请求方式（默认是GET）</span><br><span class="line">-e &lt;URL&gt; : 指定访问页面的来源页面，告诉http服务从哪个页面进入到此页面</span><br><span class="line">-f : 静默处理服务器错误(连接出错时不回显错误信息)，大多在脚本中使用为了更好的处理处理失败的情况。</span><br><span class="line">-F, --form &lt;name=content&gt; : 指定 HTTP multipart/form-data POST 参数（文件上传）</span><br><span class="line">-H : 指定http请求头header</span><br><span class="line">-i : 只输出HTTP-header，不获取内容</span><br><span class="line">-j : 告诉curl放弃所有的session，相当于重启浏览器</span><br><span class="line">-L : 当服务器地址是(自动)跳转到其他地址时，使用此选项curl就会跳转到新的网址。</span><br><span class="line">-o &lt;file&gt; : 将返回内容输出到指定文件（不加此选项默认返回到 stdout )</span><br><span class="line">-u &lt;user:password&gt; : 此参数相当于设置http头“Authorization：”</span><br><span class="line">-m &lt;seconds&gt; : 允许整个操作花费的最大时间。可以防止批量任务占用过长时间，导致网络变慢。</span><br><span class="line">--retry &lt;num&gt; : 如果遇到一个错误（超时、FTP响应码4xx、HTTP状态码5xx等）重试次数，默认是 0，表示不重试。每次重试时间间隔加倍（依次是1s，2s，4s...直到10分钟）。</span><br><span class="line">--retry-delay &lt;seconds&gt; : 设置重试时间间隔（默认加倍递增），如果设置为 0，也使用默认时间。</span><br><span class="line">--retry-max-time &lt;seconds&gt; :  重试超时时间设置，如果设置为 0 则不超时重试。</span><br></pre></td></tr></table></figure>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><p><strong>一般用法</strong></p>
+<p>  <code>curl [options] [URL...]</code></p>
+</li>
+<li><p><strong>下载页面</strong></p>
+<p>  <code>curl -o index.html http://baidu.com</code></p>
+</li>
+<li><p><strong>伪造来源页面</strong></p>
+<p>  <code>curl -e http://man.fcwalkers.com http://baidu.com</code></p>
+</li>
+<li><p><strong>发送 Json 数据到服务器</strong></p>
+<p><code>curl http://域名/graph/updateGraph -d &#39;&#123;&quot;graphId&quot;:&quot;0e7c9a918c114394bfa85d17b82e4afa&quot;,&quot;nebulaGraph&quot;:&quot;abc&quot;&#125;&#39; -H &quot;Content-type: application/json&quot;</code></p>
+</li>
+<li><p><strong>文件上传</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># @ 指定上传文件（ uploadFile 为表单 name）</span></span><br><span class="line">curl -F <span class="string">&quot;uploadFile=@./test.xlsx&quot;</span> htpp://xxx.../</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传文件，并通过 filename 对文件重命名</span></span><br><span class="line">curl -F <span class="string">&quot;uploadFile=@./test.xlsx;filename=test-copy.xlsx&quot;</span> htpp://xxx.../</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传文件，并通过 type 指定 Content-Type</span></span><br><span class="line">curl -F <span class="string">&quot;uploadFile=@./test.html;type=text/html&quot;</span> htpp://xxx.../</span><br><span class="line"></span><br><span class="line"><span class="comment"># &lt; 只获取文件内容</span></span><br><span class="line">curl -F <span class="string">&quot;uploadFile=&lt;./test.xlsx&quot;</span> http://xxx.../</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#URL%E8%AF%AD%E6%B3%95"><span class="toc-text">URL语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E4%B8%8A%E4%BC%A0/"><i class="fa fa-tags"></i>上传</a>
+     
+      <a href="/tags/%E4%B8%8B%E8%BD%BD/"><i class="fa fa-tags"></i>下载</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/du%E5%91%BD%E4%BB%A4_35.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/git%E5%91%BD%E4%BB%A4_33.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

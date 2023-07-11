@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>date命令[46] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="日期,时间," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2021-04-21
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    date命令[46]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>打印和设置日期或时间。</p>
+</blockquote>
+<h4 id="选项与参数"><a href="#选项与参数" class="headerlink" title="选项与参数"></a>选项与参数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-d,--<span class="built_in">date</span>=STRING : 显示指定的字符串时间。</span><br><span class="line">-f,--file=DATEFILE : 类似 --<span class="built_in">date</span> 显示文件中的每一行时间。</span><br><span class="line">-I[TIMESPEC],--iso-8601[=TIMESPEC] : 输出国际标准 ISO 8601 格式的日期/时间。其中 TIMESPEC 可选值有: <span class="string">&#x27;date&#x27;</span>,<span class="string">&#x27;hours&#x27;</span>, <span class="string">&#x27;minutes&#x27;</span>, <span class="string">&#x27;seconds&#x27;</span>, or <span class="string">&#x27;ns&#x27;</span> (默认为 <span class="string">&#x27;date&#x27;</span>)。</span><br><span class="line">-r : 显示文件最后的更新时间(mtime)。</span><br><span class="line">-R,--rfc-2822 : 输出 RFC 2822 格式的日期或时间。</span><br><span class="line">--rfc-3339=TIMESPEC : 输出 RFC 3339 格式或日期。TIMESPEC=<span class="string">&#x27;date&#x27;</span>, <span class="string">&#x27;seconds&#x27;</span>, or <span class="string">&#x27;ns&#x27;</span>。日期与时间用一个空格分隔。</span><br><span class="line">-s,--<span class="built_in">set</span>=STRING : 通过给定字符串设定日期和时间。</span><br><span class="line">-u,--utc : 打印或设置 utc 时间。</span><br></pre></td></tr></table></figure>
+<h4 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h4><p>格式化控制输出，具体含义如下：</p>
+<p><code>%%</code> 输出 % 符号<br><code>%a</code> 本地设置的星期名缩写(如 Sun)<br><code>%A</code> 本地设置的星期名全名(如 Sunday)<br><code>%b</code> 本地设置的月名缩写(如 Jan)<br><code>%B</code> 本地设置的月名全名(如 January)<br><code>%c</code> 本地设置的日期和时间<br><code>%C</code> 世纪<br><code>%d</code> 月中的天<br><code>%D</code> 日期，相当于 %m/%d/%y。<br><code>%e</code> 月中的天，以空格填充，相当于 %_d。<br><code>%F</code> 全日期，相当于%Y-%m-%d。<br><code>%g</code> 年的ISO周日历最后两位数字。<br><code>%G</code> 年的ISO周日历，通常只对 %V 有用。<br><code>%h</code> 相当于 %b<br><code>%H</code> 24进制小时(01..23)<br><code>%I</code> 12进制小时(01..12)<br><code>%j</code> 年中的天数(001..366)<br><code>%k</code> 24进制小时，以空格填充，相当于 %_H。<br><code>%l</code> 12进制小时，以空格填充，相当于 %_I。<br><code>%m</code> 月(01..12)<br><code>%M</code> 分钟(00..59)<br><code>%n</code> 换行<br><code>%N</code> 纳秒(000000000..999999999)<br><code>%p</code> 本地设置的 AM/PM，不确定输出空白符。<br><code>%P</code> 与 %p 类似，但是以小写字母输出。<br><code>%r</code> 本地设置的12进制时间(如：下午 03时51分53秒)<br><code>%R</code> 24进制显示时间和分钟，相当于 %H:%M。<br><code>%s</code> 自协调世界时1970年01月01日00时00分以来的秒数<br><code>%S</code> 秒数(00.60)<br><code>%t</code> tab<br><code>%T</code> 24进制显示时间，相当于 %H:%M:%S。<br><code>%u</code> 周中的天(1..7)，1为星期一。<br><code>%U</code> 年中的周，周日作为一周的第一天(00..53)。<br><code>%V</code> ISO周日历，周一作为一周的第一天(01..53)。<br><code>%w</code> 周中的天(0..6)，0为周日。<br><code>%W</code> 年中的周，周一作为一周的第一天(00..53)。<br><code>%x</code> 本地设置的日期表示(如：下午2021年04月21日)<br><code>%X</code> 本地设置的时间表示(如：下午16时06分23秒)<br><code>%y</code> 年的最后两位数字<br><code>%Y</code> 年<br><code>%z</code> ±hhmm 数值时区(如：0800)<br><code>%:z</code> ±hh:mm 数值时区(如：08:00)<br><code>%::z</code> ±hh:mm:ss 数值时区(如：08:00:00)<br><code>%Z</code> 字母时区缩写</p>
+<p>日期的默认填充是数字形式的0,通过在 % 后面追加字符可以更换填充方式：</p>
+<p><code>-</code> 不填充<br><code>_</code> 以空格填充<br><code>0</code> 以 0 填充<br><code>^</code> 如果可能，使用大写填充<br><code>#</code> 如果可能，使用相反的大小写填充。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><p><strong>一般用法</strong></p>
+<p>  <code>date [选项] [+格式]</code></p>
+  <figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 显示指定日期</span></span><br><span class="line">[root<span class="symbol">@study</span> ~]<span class="meta"># date -d <span class="string">&quot;20200102&quot;</span></span></span><br><span class="line"><span class="number">2020</span>年 <span class="number">01</span>月 <span class="number">02</span>日 星期四 <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> CST</span><br><span class="line"></span><br><span class="line"><span class="meta"># 显示指定日期时间</span></span><br><span class="line">[root<span class="symbol">@study</span> ~]<span class="meta">#  date -d <span class="string">&quot;20200102 15:30&quot;</span></span></span><br><span class="line"><span class="number">2020</span>年 <span class="number">01</span>月 <span class="number">02</span>日 星期四 <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span> CST</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>显示指定文件日期</strong></p>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@study</span> <span class="string">~</span>]<span class="comment"># cat datefile</span></span><br><span class="line"><span class="number">20201230</span></span><br><span class="line"><span class="number">1999-8</span><span class="number">-1</span> <span class="number">13</span><span class="string">:30:30</span></span><br><span class="line"></span><br><span class="line">[<span class="string">root@JD</span> <span class="string">~</span>]<span class="comment"># date -f datefile</span></span><br><span class="line"><span class="number">2020</span><span class="string">年</span> <span class="number">12</span><span class="string">月</span> <span class="number">30</span><span class="string">日</span> <span class="string">星期三</span> <span class="number">00</span><span class="string">:00:00</span> <span class="string">CST</span></span><br><span class="line"><span class="number">1999</span><span class="string">年</span> <span class="number">08</span><span class="string">月</span> <span class="number">01</span><span class="string">日</span> <span class="string">星期日</span> <span class="number">13</span><span class="string">:30:30</span> <span class="string">CST</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>格式化日期</strong></p>
+  <figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@study</span> ~]<span class="meta"># date +<span class="string">&quot;%F %T&quot;</span></span></span><br><span class="line"><span class="number">2021</span><span class="number">-04</span><span class="number">-21</span> <span class="number">16</span>:<span class="number">31</span>:<span class="number">23</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>日期填充</strong></p>
+  <figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 默认填充</span></span><br><span class="line">[root<span class="symbol">@JD</span> ~]<span class="meta"># date +%m</span></span><br><span class="line"><span class="number">04</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 无填充</span></span><br><span class="line">[root<span class="symbol">@JD</span> ~]<span class="meta"># date +%-m</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 空格填充</span></span><br><span class="line">[root<span class="symbol">@JD</span> ~]<span class="meta"># date +%_m</span></span><br><span class="line"> <span class="number">4</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><ul>
+<li><strong>GMT(Greenwich Mean Time)</strong><br>  指位于英国伦敦郊区的皇家格林威治天文台的标准时间。地球按经度分成 <code>24</code> 个区，每个区有自己当下时间，比如中国就在东 <code>8</code> 区，代号 <code>+8</code>。向东走一个区（日本，东九区），手表就要调快一个小时。</li>
+<li><strong>UTC(Coordinated Universal Time)</strong><br>  世界标准时间或世界协调时间。<code>GMT</code> 并不精准，于是以 <code>GMT</code> 为准加上修正而成的时间，被称作为 <code>UT</code>，一般对于我们来说，这两个值没有差别。早年的 <code>PC</code> 都是 <code>GMT</code>，后来换成了 <code>UT</code> 时间。</li>
+<li><strong>CST(China Standard Time)</strong><br>  中国标准时间。也就是北京时间，我国是属东八区，转成 <code>UTC</code>，加上 <code>+8</code> 的时区表示即可。</li>
+</ul>
+<hr>
+<ul>
+<li><strong>RFC 2822(Internet Message Format)</strong><br>  RFC2822标准格式 <code>day-of-week DD month-name YYYY HH:mm:ss ±hhmm</code>，如：<code>Wed, 21 Apr 2021 14:30:37 +0800</code></li>
+<li><strong>ISO 8601</strong><br>  国际标准 ISO 8601 格式 <code>YYYY-MM-DDTHH:mm:ss[Z|±hh:mm]</code>。日期与时间之间用 <code>T</code> 分割，当前如果在 <code>UTC</code> 标准时区时最后加字母 <code>Z</code>，其他时区用实际时间差表示。如北京时间 <code>2021-04-21T14:51:56+0800</code></li>
+</ul>
+<hr>
+<ul>
+<li><strong>ISO周日历</strong><br>  请参考<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/ISO%E9%80%B1%E6%97%A5%E6%9B%86">ISO周日历</a>。</li>
+</ul>
+<hr>
+<ul>
+<li><strong>文件时间</strong><br>  关于文件时间请阅读 <a href="%2Fls命令_13.html#扩展">ls</a> 命令扩展内容。</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0"><span class="toc-text">选项与参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F"><span class="toc-text">格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-text">扩展</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E6%97%A5%E6%9C%9F/"><i class="fa fa-tags"></i>日期</a>
+     
+      <a href="/tags/%E6%97%B6%E9%97%B4/"><i class="fa fa-tags"></i>时间</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/arp%E5%91%BD%E4%BB%A4_47.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/cal%E5%91%BD%E4%BB%A4_45.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

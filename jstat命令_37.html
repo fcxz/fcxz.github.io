@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>jstat 命令[37] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="JVM,JAVA," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2020-06-04
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    jstat 命令[37]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>JVM 资源和性能进行实时监控工具，它可以显示本地或者远程虚拟机进程中的类装载、内存、垃圾收集、jit编译等运行数据。该命令是实验性的，在将来的版本可能不受支持。这个命令目前在 Windows98 和 Windows ME 上无效。远程调用的服务器必须开启 jstatd，即虚拟机的jstat守护进程。</p>
+</blockquote>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p><code>jstat [ generalOption | outputOptions vmid [ interval [ s|ms ] [ count ] ] ]</code></p>
+<p> 如果连接远程虚拟机 vmid 选项语法如下：<br><code>[protocol:][//]lvmid[@hostname][:port][/servername]</code><br><strong>protocol</strong>：通信协议，如果protocol和hostname都没有指定，那么默认使用特定于平台优化的本地协议；如果protocol没有指定，但指定了hostname，那么默认使用rmi协议。<br><strong>lvmid</strong>：是一个特定于平台的值，用于唯一标示系统上的JVM。通常与操作系统的进程ID相同，可使用jps或ps命令得到该值。<br><strong>hostname</strong>：目标主机的主机名或IP地址。如果没有指定该值，那么默认为本地主机。<br><strong>port</strong>：与远程主机通讯的端口。该值只控制远程协议，本地协议将忽略。对于rmi协议，如果不指定该值，那么将使用默认值1099。<br><strong>servername</strong>：根据实现的不同，参数含义不用。本地协议将忽略该值，对于rmi协议，该参数表示远程主机rmi服务名。</p>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">参数：</span><br><span class="line">generalOption 普通命令行选项。</span><br><span class="line">outputOptions 一个或多个输出选项。</span><br><span class="line">vmid 虚拟机标识符(本机通常是一个数字)。</span><br><span class="line">interval[s|ms] 指定数字间隔时间(默认毫秒)。</span><br><span class="line">count 指定输出统计信息的总行数，达到该行数命令自动终止(默认无穷大)。</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">-a abc</span><br><span class="line">-class 显示 ClassLoad 的相关信息；</span><br><span class="line">-compiler 显示JIT编译的相关信息；</span><br><span class="line">-gc 显示和gc相关的堆信息；</span><br><span class="line">-gccapacity 显示各个代的容量以及使用情况；</span><br><span class="line">-gccause 显示垃圾回收的相关信息（通-gcutil）,同时显示最后一次或当前正在发生的垃圾回收的诱因；</span><br><span class="line">-gcnew 显示新生代信息；</span><br><span class="line">-gcnewcapacity 显示新生代大小和使用情况；</span><br><span class="line">-gcold 显示老年代和永久代的信息；</span><br><span class="line">-gcoldcapacity 显示老年代的大小；</span><br><span class="line">-gcpermcapacity 显示永久代的大小;</span><br><span class="line">-gcutil 显示垃圾收集信息；</span><br><span class="line">-printcompilation 输出JIT编译的方法信息</span><br></pre></td></tr></table></figure>
+<h4 id="状态说明"><a href="#状态说明" class="headerlink" title="状态说明"></a>状态说明</h4><ul>
+<li><strong>class</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Loaded</td>
+<td>加载类数量</td>
+</tr>
+<tr>
+<td>Bytes</td>
+<td>加载类数量大小(KB)</td>
+</tr>
+<tr>
+<td>Unloaded</td>
+<td>卸载类数量</td>
+</tr>
+<tr>
+<td>Bytes</td>
+<td>卸载类数量大小(KB)</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>类加载和卸载消耗总时间(秒)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>compiler</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compiled</td>
+<td>执行的编译任务数量    </td>
+</tr>
+<tr>
+<td>Failed</td>
+<td>失败的编译任务数量    </td>
+</tr>
+<tr>
+<td>Invalid</td>
+<td>失效的编译任务数量    </td>
+</tr>
+<tr>
+<td>Time</td>
+<td>编译任务所消耗的总时间    </td>
+</tr>
+<tr>
+<td>FailedType</td>
+<td>上次编译失败的编译类型    </td>
+</tr>
+<tr>
+<td>FailedMethod</td>
+<td>上次编译失败的类名和方法</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>gc</strong><br>C即Capacity 总容量，U即Used 已使用的容量</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S0C</td>
+<td>survivor0区的总容量</td>
+</tr>
+<tr>
+<td>S1C</td>
+<td>survivor1区的总容量</td>
+</tr>
+<tr>
+<td>S0U</td>
+<td>survivor0区已使用的容量</td>
+</tr>
+<tr>
+<td>S1U</td>
+<td>survivor1区已使用的容量</td>
+</tr>
+<tr>
+<td>EC</td>
+<td>Eden区的总容量</td>
+</tr>
+<tr>
+<td>EU</td>
+<td>Eden区已使用的容量</td>
+</tr>
+<tr>
+<td>OC</td>
+<td>Old区的总容量</td>
+</tr>
+<tr>
+<td>OU</td>
+<td>Old区已使用的容量</td>
+</tr>
+<tr>
+<td>PC</td>
+<td>当前perm的容量 (KB)</td>
+</tr>
+<tr>
+<td>PU</td>
+<td>perm的已使用容量 (KB)</td>
+</tr>
+<tr>
+<td>YGC</td>
+<td>新生代垃圾回收次数</td>
+</tr>
+<tr>
+<td>YGCT</td>
+<td>新生代垃圾回收时间</td>
+</tr>
+<tr>
+<td>FGC</td>
+<td>老年代垃圾回收次数(Full GC)</td>
+</tr>
+<tr>
+<td>FGCT</td>
+<td>老年代垃圾回收时间(Full GC)</td>
+</tr>
+<tr>
+<td>GCT</td>
+<td>垃圾回收总消耗时间</td>
+</tr>
+<tr>
+<td>MC</td>
+<td>方法区总容量</td>
+</tr>
+<tr>
+<td>MU</td>
+<td>方法区已使用容量</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>gccapacity</strong><br>内存池分代和空间容量</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NGCMN</td>
+<td>新生代占用的最小容量 </td>
+</tr>
+<tr>
+<td>NGCMX</td>
+<td>新生代占用的最大容量</td>
+</tr>
+<tr>
+<td>NGC</td>
+<td>当前新生代容量</td>
+</tr>
+<tr>
+<td>OGCMN</td>
+<td>老年代占用的最小容量</td>
+</tr>
+<tr>
+<td>OGCMX</td>
+<td>老年代占用的最大容量</td>
+</tr>
+<tr>
+<td>OGC</td>
+<td>当前老年代容量 </td>
+</tr>
+<tr>
+<td>PGCMN</td>
+<td>永久代(perm)占用最小容量 </td>
+</tr>
+<tr>
+<td>PGCMX</td>
+<td>永久代(perm)占用最大容量</td>
+</tr>
+<tr>
+<td>PGC</td>
+<td>当前永久代(perm) 容量 </td>
+</tr>
+<tr>
+<td>VGC</td>
+<td>年青代垃圾回收次数 </td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>gccause</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LGCC</td>
+<td>最近垃圾回收的原因</td>
+</tr>
+<tr>
+<td>GCC</td>
+<td>当前垃圾回收的原因</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>gcnew</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TT</td>
+<td>初始的对象在新生代中存活阈值</td>
+</tr>
+<tr>
+<td>MTT</td>
+<td>初始的对象在新生代中最大存活最大阈值(超过阈值没有被回收的，就会晋升到老年代中)</td>
+</tr>
+<tr>
+<td>DSS</td>
+<td>survivor区域大小 (KB)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>gcnewcapacity</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S0CMX</td>
+<td>survivor0 最大容量</td>
+</tr>
+<tr>
+<td>S1CMX</td>
+<td>survivor1 最大容量</td>
+</tr>
+<tr>
+<td>ECMX</td>
+<td>eden 最大容量</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>printcompilation</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compiled</td>
+<td>被执行的编译任务的数量</td>
+</tr>
+<tr>
+<td>Size</td>
+<td>方法字节码的字节数</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>编译类型</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>编译方法的类名和方法名。类名使用”/“ 代替 “.” 作为空间分隔符. 方法名是给出类的方法名. 格式是一致于HotSpot - XX:+PrintComplation 选项</td>
+</tr>
+</tbody>
+</table>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 打印 JVM 进程相关信息</span><br><span class="line">[Windus@study ~]$ jps</span><br><span class="line"><span class="number">26546</span> jar</span><br><span class="line"><span class="number">1230</span> Jps</span><br><span class="line"></span><br><span class="line"># 每隔 <span class="number">5</span> 秒打印一次 gc(垃圾回收) 相关堆信息</span><br><span class="line">[Windus@study ~]$ jstat -gc <span class="number">26546 5000</span></span><br><span class="line"> S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT</span><br><span class="line"><span class="number">1728</span>.<span class="number">0 1728.0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">177</span>.<span class="number">2</span>  <span class="number">14336.0</span>   <span class="number">324</span>.<span class="number">9</span>    <span class="number">35460.0</span>    <span class="number">29010.8</span>   <span class="number">45952.0</span> <span class="number">44928.1</span> <span class="number">5248</span>.<span class="number">0 4998.3</span>    <span class="number">121</span>    <span class="number">0</span>.<span class="number">353</span>   <span class="number">4</span>      <span class="number">0</span>.<span class="number">272</span>    <span class="number">0</span>.<span class="number">625</span></span><br></pre></td></tr></table></figure>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-text">语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E8%AF%B4%E6%98%8E"><span class="toc-text">状态说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/JVM/"><i class="fa fa-tags"></i>JVM</a>
+     
+      <a href="/tags/JAVA/"><i class="fa fa-tags"></i>JAVA</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/jps%E5%91%BD%E4%BB%A4_36.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/du%E5%91%BD%E4%BB%A4_35.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>tar命令[3] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="压缩,解压缩,打包," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-03-23
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    tar命令[3]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>虽然Linux压缩命令也能够针对目录来进行压缩，不过这些个指令对目录的压缩指的是“将目录内的所有文件 “分别” 进行压缩”的动作！而不像在 Windows 的系统，可以使用类似 WinRAR 这一类的压缩软件来将好多数据“包成一个文件”的样式。<code>tar</code>命令可以解决以上问题，同时<code>tar</code>命令也就常用于备份操作。</p>
+</blockquote>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-c  ：创建打包文件，可搭配 -v 来察看过程中被打包的文件名（filename）</span><br><span class="line">-t  ：察看打包文件的内容含有哪些文件名，重点在察看“文件名”就是了；</span><br><span class="line">-x  ：解打包或解压缩的功能，可以搭配 -C （大写） 在特定目录解开</span><br><span class="line">      特别留意的是， -c, -t, -x 不可同时出现在一串命令行中。</span><br><span class="line">-z  ：通过 gzip  的支持进行压缩/解压缩：此时文件名最好为 *.tar.gz</span><br><span class="line">-j  ：通过 bzip2 的支持进行压缩/解压缩：此时文件名最好为 *.tar.bz2</span><br><span class="line">-J  ：通过 xz    的支持进行压缩/解压缩：此时文件名最好为 *.tar.xz</span><br><span class="line">      特别留意， -z, -j, -J 不可以同时出现在一串命令行中</span><br><span class="line">-v  ：在压缩/解压缩的过程中，将正在处理的文件名显示出来！</span><br><span class="line">-f filename：-f 后面要立刻接要被处理的文件名！建议 -f 单独写一个选项啰！（比较不会忘记）</span><br><span class="line">-C 目录    ：这个选项用在解压缩，若要在特定目录解压缩，可以使用这个选项。</span><br><span class="line"></span><br><span class="line">其他后续练习会使用到的选项介绍：</span><br><span class="line">-p（小写） ：保留备份数据的原本权限与属性，常用于备份（-c）重要的配置文件</span><br><span class="line">-P（大写） ：保留绝对路径，亦即允许备份数据中含有根目录存在之意；</span><br><span class="line">--exclude=FILE：在压缩的过程中，不要将 FILE 打包！(多个文件使用多个 --exclude=文件(夹)名)</span><br></pre></td></tr></table></figure>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><strong>打包与压缩</strong><br><code>tar [-z|-j|-J][cv][-f 待创建的新文件名] filename...</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gzip 压缩打包</span></span><br><span class="line">[root@study ~] tar -czvf etc.tar.gz /etc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 排除指定文件</span></span><br><span class="line">tar --exclude=shadow- etc.tar.gz /etc</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>察看文件名</strong><br><code>tar [-z|-j|-J][tv] [-f 既有的 tar文件名]</code></p>
+</li>
+<li><p><strong>解压缩</strong><br><code>tar [-z|-j|-J] [xv] [-f 既有的 tar文件名][-C 目录]</code></p>
+</li>
+<li><p><strong>解压tar包内单一文件</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 先找到我们要的文件名，假设解开 shadow 文件好了：</span></span><br><span class="line">[root@study ~]<span class="comment"># tar -jtv -f /root/etc.tar.bz2 | grep &#x27;shadow&#x27;</span></span><br><span class="line">---------- root/root       721 2015-06-17 00:20 etc/gshadow</span><br><span class="line">---------- root/root      1183 2015-06-17 00:20 etc/shadow-</span><br><span class="line">---------- root/root      1210 2015-06-17 00:20 etc/shadow  &lt;==这是我们要的！</span><br><span class="line">---------- root/root       707 2015-06-17 00:20 etc/gshadow-</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 将该文件解开！语法与实际作法如下：</span></span><br><span class="line">[root@study ~]<span class="comment"># tar -jxv -f 打包档.tar.bz2 待解开文件名</span></span><br><span class="line">[root@study ~]<span class="comment"># tar -jxv -f /root/etc.tar.bz2 etc/shadow</span></span><br><span class="line">etc/shadow</span><br><span class="line">[root@study ~]<span class="comment"># ll etc</span></span><br><span class="line">total 4</span><br><span class="line">----------. 1 root root 1210 Jun 17 00:20 shadow</span><br><span class="line"><span class="comment"># 此时只会解开一个文件而已！不过，要找到正确的文件名。</span></span><br><span class="line"><span class="comment"># 在本例中，你不能写成 /etc/shadow ！因为记录在 etc.tar.bz2 内的并没有 / 之故！</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>tar备份</strong></li>
+</ul>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]<span class="comment"># su -  # 因为备份 /etc 需要 root 的权限，否则会出现一堆错误</span></span><br><span class="line">[root@study ~]<span class="comment"># time tar -zpcv -f /root/etc.tar.gz /etc</span></span><br><span class="line">tar: Removing leading `/&#x27; from member names  &lt;==注意这个警告讯息</span><br><span class="line"><span class="string">/etc/</span></span><br><span class="line"><span class="string">....</span>（中间省略）<span class="string">....</span></span><br><span class="line"><span class="string">/etc/hostname</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#多了time会显示程序运行时间</span></span><br><span class="line"><span class="comment">#加上&quot;-p&quot;选项原因是为了保存原本文件的权限和属性</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>tar</code>备份默认是没有根目录的,那为什么要拿掉根目录呢？主要是为了安全！我们使用 <code>tar</code> 备份的数据可能会需要解压缩回来使用， 在 <code>tar</code> 所记录的文件名 （就是我们刚刚使用 <code>tar -jtvf</code> 所察看到的文件名） 那就是解压缩后的实际文件名。 如果拿掉了根目录，假设你将备份数据在 <code>/tmp</code> 解开，那么解压缩的文件名就会变成<code>/tmp/etc/xxx</code>。 但“如果没有拿掉根目录，解压缩后的文件名就会是绝对路径， 亦即解压缩后的数据一定会被放置到 <code>/etc/xxx</code> 去！如此一来，你的原本的 <code>/etc/</code> 下面的数据， 就会被备份数据所覆盖过去了！如果想保存根目录可以使用-P选项</p>
+</blockquote>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E5%8E%8B%E7%BC%A9/"><i class="fa fa-tags"></i>压缩</a>
+     
+      <a href="/tags/%E8%A7%A3%E5%8E%8B%E7%BC%A9/"><i class="fa fa-tags"></i>解压缩</a>
+     
+      <a href="/tags/%E6%89%93%E5%8C%85/"><i class="fa fa-tags"></i>打包</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/shutdown%E5%91%BD%E4%BB%A4_12.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/unzip%E5%91%BD%E4%BB%A4_8.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>sed命令[1] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="管线,分割,撷取," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-03-22
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    sed命令[1]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p> <code>sed</code> 是一个管线命令，将读取的数据进行取代、删除、新增、撷取特定行等功能并输出到屏幕，该功能默认不会修改原有文件。可以通过<code>-i</code>选项来修改原文件。</p>
+</blockquote>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-n  ：使用安静（silent）模式。在一般 sed 的用法中，所有来自 STDIN 的数据一般都会被列出到屏幕上。</span><br><span class="line">      但如果加上 -n 参数后，则只有经过 sed 特殊处理的那一行（或者动作）才会被列出来。</span><br><span class="line">-e  ：直接在命令行界面上进行 sed 的动作编辑；</span><br><span class="line">-f  ：直接将 sed 的动作写在一个文件内， -f filename 则可以执行 filename 内的 sed 动作；</span><br><span class="line">-r  ：sed 的动作支持的是延伸型正则表达式的语法。（默认是基础正则表达式语法）</span><br><span class="line">-<span class="selector-tag">i</span>  ：直接修改读取的文件内容，而不是由屏幕输出。</span><br><span class="line"></span><br><span class="line">动作说明：  <span class="selector-attr">[n1[,n2]</span>]function</span><br><span class="line">n1, n2 ：不见得会存在，一般代表“选择进行动作的行数”，举例来说，如果我的动作是需要在 <span class="number">10</span> 到 <span class="number">20</span> 行之间进行的，则“ <span class="number">10</span>,<span class="number">20</span><span class="selector-attr">[动作行为]</span> ”</span><br><span class="line"></span><br><span class="line">function 有下面这些：</span><br><span class="line"><span class="selector-tag">a</span>   ：新增， <span class="selector-tag">a</span> 的后面可以接字串，而这些字串会在新的一行出现（目前的下一行）～</span><br><span class="line">c   ：取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行！</span><br><span class="line">d   ：删除，因为是删除啊，所以 d 后面通常不接任何咚咚；</span><br><span class="line"><span class="selector-tag">i</span>   ：插入， <span class="selector-tag">i</span> 的后面可以接字串，而这些字串会在新的一行出现（目前的上一行）；</span><br><span class="line"><span class="selector-tag">p</span>   ：打印，亦即将某个选择的数据印出。通常 <span class="selector-tag">p</span> 会与参数 sed -n 一起运行～</span><br><span class="line">s   ：取代，可以直接进行取代的工作！通常这个 s 的动作可以搭配正则表达式！</span><br></pre></td></tr></table></figure>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><p>以行为单位的功能</p>
+  <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将/etc/passwd 的内容列出并且打印行号，同时，请将第 	2~5 行删除！</span></span><br><span class="line">[root<span class="variable">@study</span> ~]<span class="comment"># nl /etc/passwd | sed &#x27;2,5d&#x27;</span></span><br><span class="line">  	<span class="number">1</span> <span class="symbol">root:</span><span class="symbol">x:</span><span class="number">0</span><span class="symbol">:</span><span class="number">0</span><span class="symbol">:root</span><span class="symbol">:/root</span><span class="symbol">:/bin/bash</span></span><br><span class="line">  	<span class="number">6</span> <span class="symbol">sync:</span><span class="symbol">x:</span><span class="number">5</span><span class="symbol">:</span><span class="number">0</span><span class="symbol">:sync</span><span class="symbol">:/sbin</span><span class="symbol">:/bin/sync</span></span><br><span class="line">  	<span class="number">7</span> <span class="symbol">shutdown:</span><span class="symbol">x:</span><span class="number">6</span><span class="symbol">:</span><span class="number">0</span><span class="symbol">:shutdown</span><span class="symbol">:/sbin</span><span class="symbol">:/sbin/</span>		shutdown</span><br><span class="line">	.....（后面省略）.....</span><br><span class="line">	</span><br><span class="line"><span class="comment"># 承上，在第二行后（亦即是加在第三行）加上“drink tea?”字样！</span></span><br><span class="line">[root<span class="variable">@study</span> ~]<span class="comment"># nl /etc/passwd | sed &#x27;2a drink tea&#x27;</span></span><br><span class="line">    <span class="number">1</span>  <span class="symbol">root:</span><span class="symbol">x:</span><span class="number">0</span><span class="symbol">:</span><span class="number">0</span><span class="symbol">:root</span><span class="symbol">:/root</span><span class="symbol">:/bin/bash</span></span><br><span class="line">    <span class="number">2</span>  <span class="symbol">bin:</span><span class="symbol">x:</span><span class="number">1</span><span class="symbol">:</span><span class="number">1</span><span class="symbol">:bin</span><span class="symbol">:/bin</span><span class="symbol">:/sbin/nologin</span></span><br><span class="line">		drink tea</span><br><span class="line">    <span class="number">3</span>  <span class="symbol">daemon:</span><span class="symbol">x:</span><span class="number">2</span><span class="symbol">:</span><span class="number">2</span><span class="symbol">:daemon</span><span class="symbol">:/sbin</span><span class="symbol">:/sbin/nologin</span></span><br><span class="line">	.....（后面省略）.....</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>部分数据的搜索与取代功能<br>  <code>sed &#39;s/要被取代的字串(或正则)/新的字串/g&#39;</code><br>  如果想用以行为单位取代<br>  <code>sed &#39;n1,n2s/要被取代的字串(或正则)/新的字串/g&#39;</code></p>
+</li>
+<li><p>直接修改文件内容（危险动作）<br>  -i 选项可以让 sed 直接去修改后面接的文件内容而不是由屏幕输出！</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">用 sed 将 regular_express.txt 内每一行结尾若为 . 则换成 !</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sed -i <span class="string">&#x27;s/\.$/\!/g&#x27;</span> regular_express.txt</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">利用 sed 直接在 regular_express.txt 最后一行加	入“<span class="comment"># This is a test”</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sed -i <span class="string">&#x27;$a # This is a test&#x27;</span> 	regular_express.txt</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">由于 $ 代表的是最后一行，而 a 的动作是新增，因此该	文件最后新增！</span></span><br></pre></td></tr></table></figure></li>
+<li><p>正则读取<br>  配合 -n p使用读取文件匹配内容<br>  <code>sed -n &#39;/正则表达式/p&#39; 文件名</code> </p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n <span class="string">&#x27;/graphs.*\]/p&#x27;</span> rest-server.properties</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E7%AE%A1%E7%BA%BF/"><i class="fa fa-tags"></i>管线</a>
+     
+      <a href="/tags/%E5%88%86%E5%89%B2/"><i class="fa fa-tags"></i>分割</a>
+     
+      <a href="/tags/%E6%92%B7%E5%8F%96/"><i class="fa fa-tags"></i>撷取</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/zip%E5%91%BD%E4%BB%A4_7.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/awk%E5%91%BD%E4%BB%A4_2.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

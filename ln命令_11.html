@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>ln命令[11] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="文件,磁盘,实体链接,符号链接," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-03-23
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    ln命令[11]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><code>ln</code>命令用来为某一个文件在另外一个位置建立一个同不的链接，连接类型分为硬连接和符号连接两种，其中符号链接最为常用，符号链接类似于<code>Windows</code>系统中的<code>快捷方式</code>。  </p>
+</blockquote>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-s  ：如果不加任何参数就进行链接，那就是hard <span class="built_in">link</span>，至于 -s 就是symbolic <span class="built_in">link</span></span><br><span class="line">-f  ：如果 目标文件 存在时，就主动的将目标文件直接移除后再创建！</span><br></pre></td></tr></table></figure>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><strong>一般用法</strong></li>
+</ul>
+<p><code>ln [选项] 来源文件 目标文件</code></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 将crontab2链接到<span class="regexp">/etc/</span>crontab文件</span><br><span class="line">[root@study ~]# ln -s <span class="regexp">/etc/</span>crontab crontab2</span><br><span class="line">[root@study ~]# ll -i <span class="regexp">/etc/</span>crontab <span class="regexp">/root/</span>crontab2</span><br><span class="line"><span class="number">34474855</span> -rw-r--r--. <span class="number">2</span> root root <span class="number">451</span> Jun <span class="number">10</span>  <span class="number">2014</span> <span class="regexp">/etc/</span>crontab</span><br><span class="line"><span class="number">53745909</span> lrwxrwxrwx. <span class="number">1</span> root root  <span class="number">12</span> Jun <span class="number">23</span> <span class="number">22</span>:<span class="number">31</span> <span class="regexp">/root/</span>crontab2 -&gt; <span class="regexp">/etc/</span>crontab</span><br></pre></td></tr></table></figure>
+<p>上面结果我们可以知道两个文件指向不同的<code>inode</code>号码，当然就是两个独立的文件存在！ 而且链接文件的重要内容就是他会写上目标文件的<code>文件名</code>， 你可以发现为什么上表中链接文件的大小为<code>12 Bytes</code>呢？ 因为箭头（<code>--&gt;</code>）右边的文件名<code>/etc/crontab</code>总共有 12 个英文，每个英文占用 1 个 <code>Bytes</code> ，所以文件大小就是 <code>12Bytes</code>了！</p>
+<h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><hr>
+<ul>
+<li><strong>Hard Link （实体链接, 硬式链接或实际链接）</strong><br>由于每个文件都占用一个<code>inode</code>,文件内容由<code>inode</code>记录指向,想要读取文件必须经过目录记录的文件名来指向到正确的<code>inode</code>号码才能读取.也就是说,其实文件名只与目录有关,但是文件内容则与<code>inode</code>有关.<br>如果有多个文件名对应一个<code>inode</code>,那就是实体链接的由来.</li>
+</ul>
+<p><strong><em>实体链接限制</em></strong>：</p>
+<blockquote>
+<ul>
+<li>不能跨FileSystem</li>
+<li>不能链接目录</li>
+</ul>
+</blockquote>
+<p><em>如果<code>hard link</code>到链接到目录时,链接的数据需要连同被链接目录下面的所有数据都创建链接，举例来说，如果你要将 <code>/etc</code> 使用实体链接创建一个 <code>/etc_hd</code> 的目录时，那么在 <code>/etc_hd</code> 下面的所有文件名同时都与 <code>/etc</code> 下面的文件名要创建 <code>hard link</code> 的，而不是仅链接到 <code>/etc_hd</code> 与 <code>/etc</code> 而已。 并且，未来如果需要在 <code>/etc_hd</code> 下面创建新文件时，连带的， <code>/etc</code> 下面的数据又得要创建一次 <code>hard link</code> ，因此造成环境相当大的复杂度.所以，目前 <code>hard link</code> 对于目录暂时还是不支持的啊！</em></p>
+<ul>
+<li><strong>Symbolic Link(符号链接)</strong><br><code>Symbolic link</code> 就是在创建一个独立的文件，而这个文件会让数据的读取指向他链接的那个文件的文件名！由于只是利用文件来做为指向的动作， 所以，当来源文件被删除之后，<code>symbolic link</code> 的文件会无法打开， 会一直提示“无法打开某文件！”。实际上就是找不到原始“文件名”而已！</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-text">扩展</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E6%96%87%E4%BB%B6/"><i class="fa fa-tags"></i>文件</a>
+     
+      <a href="/tags/%E7%A3%81%E7%9B%98/"><i class="fa fa-tags"></i>磁盘</a>
+     
+      <a href="/tags/%E5%AE%9E%E4%BD%93%E9%93%BE%E6%8E%A5/"><i class="fa fa-tags"></i>实体链接</a>
+     
+      <a href="/tags/%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5/"><i class="fa fa-tags"></i>符号链接</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/gzip%E5%91%BD%E4%BB%A4_4.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/shutdown%E5%91%BD%E4%BB%A4_12.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

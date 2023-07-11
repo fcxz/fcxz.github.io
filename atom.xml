@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Linux命令手册 | 风尘</title>
+  
+  <subtitle>一个逐渐完善中的Linux命令手册站点!</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://man.fcwalkers.com/"/>
+  <updated>2022-08-23T05:57:49.617Z</updated>
+  <id>http://man.fcwalkers.com/</id>
+  
+  <author>
+    <name>风尘</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>xargs 命令[54]</title>
+    <link href="http://man.fcwalkers.com/xargs%E5%91%BD%E4%BB%A4_54.html"/>
+    <id>http://man.fcwalkers.com/xargs命令_54.html</id>
+    <published>2022-08-15T16:00:00.000Z</published>
+    <updated>2022-08-23T05:57:49.617Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><code>xargs</code>是给命令传递参数的一个过滤器，可以将管道或标准输入（<code>stdin</code>）数据转换成命令行参数，也能够从文件的输出中读取数据，并且以空白符或换行符作为分隔符。</p></blockquote><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-0 : 如果输入的 stdin 含有特殊字符（如 ` \ 空白符），该参数可以将它们还原成一般字符。</span><br><span class="line">-a : 从文件中读取数据代替标准输入。</span><br><span class="line">-E : 设置一个结束符，当 xargs 分析到这个字符时就会停止。</span><br><span class="line">-p : 执行每个指令的 argument 时，都会询问一次用户。</span><br><span class="line">-n : 后面加次数，表示每次命令执行时使用几个参数。</span><br><span class="line">-t : 在每次命令执行前先打印标准错误输出。</span><br><span class="line">-I : 将从标准输入读取到的参数名称替换成指定的符号（如&#123;&#125;）。</span><br><span class="line">-r : 当标准输入为空的时候则停止执行。</span><br><span class="line">-L : 从标准输入一次读取多少行给 command 命令。</span><br><span class="line">-d : 设置分隔符，默认 xargs 分隔符是回车，argument 的分隔符是空格，这里是修改 xargs 的分隔符。</span><br><span class="line">-s : 设置每个命令行最大字符数，指 xargs 后面的命令（包含命令和参数）。</span><br><span class="line">-x : 配合 -s 使用，如果超出限制则退出。</span><br></pre></td></tr></table></figure><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><p>打印每个用户的信息</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 指定 -n 只取第一个参数</span></span><br><span class="line">[root@study ~]<span class="comment"># cut -d &#x27;:&#x27; -f 1 /etc/passwd | xargs -n 1 id</span></span><br><span class="line">uid=0(root) gid=0(root) <span class="built_in">groups</span>=0(root)</span><br><span class="line">uid=1(bin) gid=1(bin) <span class="built_in">groups</span>=1(bin)</span><br><span class="line">uid=2(daemon) gid=2(daemon) <span class="built_in">groups</span>=2(daemon)</span><br><span class="line">uid=3(adm) gid=4(adm) <span class="built_in">groups</span>=4(adm)</span><br><span class="line">uid=4(lp) gid=7(lp) <span class="built_in">groups</span>=7(lp)</span><br><span class="line">uid=5(<span class="built_in">sync</span>) gid=0(root) <span class="built_in">groups</span>=0(root)</span><br><span class="line">...省略</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 -E 选项，遇到 sync 字符就结束</span></span><br><span class="line">[root@study ~]<span class="comment"># cut -d &#x27;:&#x27; -f 1 /etc/passwd | xargs -E &#x27;sync&#x27; -n 1 id</span></span><br><span class="line"></span><br><span class="line">uid=0(root) gid=0(root) <span class="built_in">groups</span>=0(root)</span><br><span class="line">uid=1(bin) gid=1(bin) <span class="built_in">groups</span>=1(bin)</span><br><span class="line">uid=2(daemon) gid=2(daemon) <span class="built_in">groups</span>=2(daemon)</span><br><span class="line">uid=3(adm) gid=4(adm) <span class="built_in">groups</span>=4(adm)</span><br></pre></td></tr></table></figure></li><li><p>查找特殊权限文件名并列出详细信息</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]<span class="comment"># find /usr/sbin/ -perm /7000 | xargs ls -l</span></span><br><span class="line">-rwxr-sr-x. 1 root root      11224 Oct 13  2020 /usr/sbin/netreport</span><br><span class="line">-rwsr-xr-x. 1 root root      11232 Apr  1  2020 /usr/sbin/pam_timestamp_check</span><br><span class="line">-rwxr-sr-x. 1 root postdrop 218560 Apr  1  2020 /usr/sbin/postdrop</span><br><span class="line">-rwxr-sr-x. 1 root postdrop 264128 Apr  1  2020 /usr/sbin/postqueue</span><br><span class="line">-rwsr-xr-x. 1 root root      36272 Apr  1  2020 /usr/sbin/unix_chkpwd</span><br><span class="line">-rwsr-xr-x. 1 root root      11296 Oct 13  2020 /usr/sbin/usernetctl</span><br></pre></td></tr></table></figure></li><li><p>打印文件内容</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]<span class="comment"># cat &gt; test.txt &lt;&lt; EOF</span></span><br><span class="line">a b c d e f g</span><br><span class="line">h i j k l m n</span><br><span class="line">o p q</span><br><span class="line">r s t</span><br><span class="line">u v w x y z</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">[root@study ~]<span class="comment"># cat test.txt | xargs -n3</span></span><br><span class="line">a b c</span><br><span class="line">d e f</span><br><span class="line">g h i</span><br><span class="line">j k l</span><br><span class="line">m n o</span><br><span class="line">p q r</span><br><span class="line">s t u</span><br><span class="line">v w x</span><br><span class="line">y z</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;xargs&lt;/code&gt;是给命令传递参数的一个过滤器，可以将管道或标准输入（&lt;code&gt;stdin&lt;/code&gt;）数据转换成命令行参数，也能够从文件的输出中读取数据，并且以空白符或换行符作为分隔符。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="管线" scheme="http://man.fcwalkers.com/tags/%E7%AE%A1%E7%BA%BF/"/>
+    
+      <category term="打印" scheme="http://man.fcwalkers.com/tags/%E6%89%93%E5%8D%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>seq 命令[53]</title>
+    <link href="http://man.fcwalkers.com/seq%E5%91%BD%E4%BB%A4_53.html"/>
+    <id>http://man.fcwalkers.com/seq命令_53.html</id>
+    <published>2022-08-07T16:00:00.000Z</published>
+    <updated>2022-08-23T03:30:29.888Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>打印一连串的数字，可以指定开始值、增量值以及结束值。</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p><code>seq [选项] [开始] [增量] 结束</code></p><p>如果开始和增量省略，默认值为<code>1</code>。如果只给定其中两项，则默认增量值为<code>1</code>。</p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-f : 以 printf 函数的浮点型格式化显示（默认是 &#x27;％g&#x27;），常用格式为： -f &#x27;%[正负符号] [填充符号] [显示位数]&#x27;。该选项不能与 -w 同时使用。</span><br><span class="line">-s : 指定分割符（默认是 &#x27;\n&#x27;）</span><br><span class="line">-w : 左侧用 0 填充</span><br></pre></td></tr></table></figure><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><p>打印序列数字</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印 1 到 10 数字</span></span><br><span class="line">[root@study ~]<span class="comment"># seq 1 10</span></span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印 10 到 1 数字</span></span><br><span class="line">[root@study ~]<span class="comment"># seq 10 -1 1</span></span><br><span class="line">10</span><br><span class="line">9</span><br><span class="line">8</span><br><span class="line">7</span><br><span class="line">6</span><br><span class="line">5</span><br><span class="line">4</span><br><span class="line">3</span><br><span class="line">2</span><br><span class="line">1</span><br></pre></td></tr></table></figure></li><li><p>指定分割符为逗号</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]<span class="comment"># seq -s &#x27;,&#x27; 1 10</span></span><br><span class="line">1,2,3,4,5,6,7,8,9,10</span><br></pre></td></tr></table></figure></li><li><p>指定填充符号和位数</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用 0 填充 3 位，增量步长为 2</span></span><br><span class="line">[root@study ~]<span class="comment"># seq -f &#x27;%03g&#x27; 1 2 10</span></span><br><span class="line">001</span><br><span class="line">003</span><br><span class="line">005</span><br><span class="line">007</span><br><span class="line">009</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;打印一连串的数字，可以指定开始值、增量值以及结束值。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;语法&quot;&gt;&lt;a href=&quot;#语法&quot; class=&quot;headerlink&quot; title=&quot;语法&quot;&gt;&lt;/a&gt;语法&lt;/h4&gt;&lt;p&gt;&lt;code&gt;seq
+      
+    
+    </summary>
+    
+    
+      <category term="数字" scheme="http://man.fcwalkers.com/tags/%E6%95%B0%E5%AD%97/"/>
+    
+      <category term="打印" scheme="http://man.fcwalkers.com/tags/%E6%89%93%E5%8D%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>rsync 命令[52]</title>
+    <link href="http://man.fcwalkers.com/rsync%E5%91%BD%E4%BB%A4_52.html"/>
+    <id>http://man.fcwalkers.com/rsync命令_52.html</id>
+    <published>2022-07-24T16:00:00.000Z</published>
+    <updated>2022-07-26T08:58:44.445Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><code>rsync</code>是一个支持本地与远程计算机之间文件同步的工具，也支持两个本地目录间文件同步。默认使用“快速检查”算法查找文件大小或者上次修改时间被改变的文件进行传输。它支持</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p>有两种方式通过<code>rsync</code>与远程系统联系，一是使用一个远程的<code>shell</code>程序（如<code>ssh</code>或<code>rsh</code>），另一种方法是直接通过<code>TCP</code>连接一个<code>rsync</code>守护进程。远程<code>shell</code>通过<code>:</code>符号分割本地和远程地址，守护进程通过<code>::</code>符号分割或者使用<code>rsync://</code>方式。</p><p><strong>本地：</strong> <code>rsync [OPTION...] SRC... [DEST]</code></p><p><strong>远程<code>shell</code>：</strong> </p><ul><li><p>Pull<br><code>rsync [OPTION...] [USER@]HOST:SRC... [DEST]</code></p></li><li><p>Push<br><code>rsync [OPTION...] SRC... [USER@]HOST:DEST</code></p></li></ul><p><strong>守护进程：</strong></p><ul><li>Pull<br><code>rsync [OPTION...] [USER@]HOST::SRC... [DEST]</code><br><code>rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]</code></li><li>Push<br><code>rsync [OPTION...] SRC... [USER@]HOST::DEST</code><br><code>rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST</code></li></ul><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">-v : 显示传输信息（默认是无任何信息输出）（常用）</span><br><span class="line">-q : 减少信息输出，尤其是远程服务器信息</span><br><span class="line">-I : 不跳过文件大小和更新时间相同的文件（关闭“快速检查”算法，所有文件都传输）</span><br><span class="line">--size-only : 修改“快速检查”算法，仅考虑文件大小条件，不考虑文件时间是否被修改</span><br><span class="line">-a : 归档模式，表示希望递归并希望保留几乎所有内容的快速方式，相当于使用 &#x27;-rlptgoD&#x27; 选项（常用）</span><br><span class="line">-r : 递归复制文件夹</span><br><span class="line">-z : 对备份文件传输时压缩处理</span><br><span class="line">--compress-level=NUM : 文件压缩级别</span><br><span class="line">-R : 使用相对路径</span><br><span class="line">-b : 备份文件，如果目标路径已存在则会将旧文件重命名为 filename~ ，可以结合 --backup-dir 和 --suffix 选项使用</span><br><span class="line">--backup-dir=DIR : 将旧备份文件放在指定目录下</span><br><span class="line">--suffix=SUFFIX : 定义备份文件名的后缀</span><br><span class="line">-u : 跳过已经存在的文件，仅更新未存在的文件</span><br><span class="line">-l : 保留软链接</span><br><span class="line">-L : 当遇到软链接时，复制它们指向的文件。</span><br><span class="line">-H : 保留硬链接</span><br><span class="line">-p : 保留权限</span><br><span class="line">-o : 保留拥有者</span><br><span class="line">-g : 保留分组</span><br><span class="line">--remove-source-files : 删除 SRC 中的文件（不包括目录）</span><br><span class="line">--delete : 删除 DEST 中 SRC 不存在的文件</span><br><span class="line">--exclude=PATTERN : 排除不需要的文件</span><br><span class="line">--chown=USER:GROUP : 强制更改文件所有者和分组</span><br><span class="line">--timeout=TIMEOUT : 传输超时时间（默认 0，单位秒）</span><br></pre></td></tr></table></figure><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><p>本地同步</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 同步 public 目录下文件到 out 目录下，并且删除 out 目录中 public 里不存在的文件</span></span><br><span class="line">[root@study ~] rsync -azv --delete public/ out/</span><br></pre></td></tr></table></figure></li><li><p>相对路径<code>-R</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 远程机器将创建一个 /tmp/foo/bar/baz.c 的文件</span></span><br><span class="line">[root@study ~] rsync -avR /foo/bar/baz.c /tmp/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 远程机器仅在 /tmp/ 目录创建一个 baz.c 文件</span></span><br><span class="line">[root@study ~] rsync -av /foo/bar/baz.c /tmp/</span><br></pre></td></tr></table></figure></li><li><p>文件备份</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前目录下文件</span></span><br><span class="line">[root@study ~] <span class="built_in">ls</span> -l </span><br><span class="line">a.txt </span><br><span class="line">b.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 备份 a.txt 文件到 backup 目录，同时设置旧文件名前缀为 0725，旧文件路径为 older</span></span><br><span class="line">[root@study ~] rsync -b a.txt --suffix=0725 --backup-dir=older backup/</span><br><span class="line"><span class="comment"># 查看备份结果，因为第一次 backup 目录下没有文件所以 older 目录为空</span></span><br><span class="line">[root@study ~] <span class="built_in">ls</span> backup/ &amp;&amp; <span class="built_in">ls</span> backup/older</span><br><span class="line">a.txt</span><br><span class="line"><span class="comment"># 继续执行备份文件命令</span></span><br><span class="line">[root@study ~] rsync -b a.txt --suffix=0725 --backup-dir=older backup/</span><br><span class="line"><span class="comment"># 查看备份文件结果，因为第二次执行 backup 目录下已经存在目录，所以会将文件重命名后放入 older 目录</span></span><br><span class="line">[root@study ~] <span class="built_in">ls</span> backup/ &amp;&amp; <span class="built_in">ls</span> backup/older</span><br><span class="line">a.txt</span><br><span class="line">a.txt0725</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;rsync&lt;/code&gt;是一个支持本地与远程计算机之间文件同步的工具，也支持两个本地目录间文件同步。默认使用“快速检查”算法查找文件大小或者上次修改时间被改变的文件进行传输。它支持&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;语
+      
+    
+    </summary>
+    
+    
+      <category term="文件" scheme="http://man.fcwalkers.com/tags/%E6%96%87%E4%BB%B6/"/>
+    
+      <category term="同步" scheme="http://man.fcwalkers.com/tags/%E5%90%8C%E6%AD%A5/"/>
+    
+      <category term="远程同步" scheme="http://man.fcwalkers.com/tags/%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>complete 命令[51]</title>
+    <link href="http://man.fcwalkers.com/complete%E5%91%BD%E4%BB%A4_51.html"/>
+    <id>http://man.fcwalkers.com/complete命令_51.html</id>
+    <published>2022-06-16T16:00:00.000Z</published>
+    <updated>2022-07-25T09:34:32.915Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><code>complete</code>是一个<code>bash</code>内置命令，用于指定对每个名称的参数如何补全。它也是bash自动按两次TAB实现自动补全调用的命令。</p></blockquote><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">-a : 别名</span><br><span class="line">-b : 内置命令</span><br><span class="line">-c : 可用命令</span><br><span class="line">-d : 目录名</span><br><span class="line">-f : 文件名（包括目录名）</span><br><span class="line">-e : 环境变量</span><br><span class="line">-v : 变量名</span><br><span class="line">-u : 用户名</span><br><span class="line">-g : 群组名</span><br><span class="line">-j : <span class="type">Job</span> 名</span><br><span class="line">-k : <span class="type">Bash</span> 保留关键字</span><br><span class="line">-s : 服务名</span><br><span class="line"></span><br><span class="line">-o 排版 : 控制着生成补全条目其他几个排版选项：</span><br><span class="line">    bashdefault  如果没有匹配的内容生成，则使用 bash 默认的其余补全</span><br><span class="line">    default      如果没有匹配的内容生成，则使用 readline 默认文件名补全</span><br><span class="line">    dirnames     如果没有匹配的内容生成，则使用目录名称补全</span><br><span class="line">    filenames    匹配内容会生成文件名，因此它可以执行任何特定于文件名的处理(比如在目录名中添加斜杠、引用特殊字符或取消尾部空格)。用于与 shell 函数一起使用</span><br><span class="line">    nospace      匹配内容在行尾不追加空格</span><br><span class="line">    plusdirs     匹配内容生成后，尝试匹配目录名并追加到其他动作之后</span><br><span class="line"></span><br><span class="line">-A 动作 : 动作有以下可选值：</span><br><span class="line">    alias     相当于　-a　选项.</span><br><span class="line">    arrayvar  数组变量</span><br><span class="line">    binding   快捷键绑定名</span><br><span class="line">    builtin   相当于 -b　选项.</span><br><span class="line">    command   相当于 -c　选项.</span><br><span class="line">    directory 相当于 -d　选项.</span><br><span class="line">    disabled　被禁用的内建命令.</span><br><span class="line">    enabled 　被启用的内建命令.</span><br><span class="line">    export    相当于 -c　选项.</span><br><span class="line">    file      相当于 -f　选项.</span><br><span class="line">    <span class="keyword">function</span>  <span class="title">所有函数名</span></span><br><span class="line">    group     相当于 -g　选项.</span><br><span class="line">    helptopic 内建命令 help 支持的帮助主题</span><br><span class="line">    hostname　获取 HOSTFILE 变量指定的文件内的主机名，默认 /etc/hosts 文件</span><br><span class="line">    job       相当于 -j　选项.</span><br><span class="line">    keyword   相当于 -k　选项.</span><br><span class="line">    running   如果 job 是活跃的，显示运行中的 Jobs</span><br><span class="line">    service   相当于 -s　选项.</span><br><span class="line">    setopt    内建命令 set 选项 -o 的可用参数</span><br><span class="line">    shopt     内建命令 shopt 可接受的选项名</span><br><span class="line">    signal　  信号名</span><br><span class="line">    stopped   如果 job 是活跃的，显示停止的　Jobs.</span><br><span class="line">    user      相当于 -u　选项.</span><br><span class="line">    variable  相当于 -v　选项.</span><br><span class="line"></span><br><span class="line">-C 命令 : 在子程序中执行命令，它的输出被用于可能的补全</span><br><span class="line">-F 函数 : 在当前程序中执行函数，执行完成后，可能补全的内容被接收到 <span class="type">COMPREPLY</span> 数组变量中</span><br><span class="line">-P 前缀 : 在已匹配结果前添加前缀</span><br><span class="line">-S 后缀 : 在已匹配结果后追加后缀</span><br><span class="line">-G globpat   : 路径扩展名模式，<span class="type">globpat</span>进行扩展以生成可能的补全内容</span><br><span class="line">-W wordlist  : 使用变量 <span class="type">IFS</span> 设定的字符作为分割符，分割 wordlist 并作为可能补全的内容</span><br><span class="line">-X filterpat : <span class="type">filterpat</span> 是一个模式用于路径名扩展，它作用于通过前面的选项和参数生成的补全列表，并把每个与过滤模式匹配的条目删除，模式中前导的叹号表示否定，这时会删除与过滤模式不匹配的条目</span><br></pre></td></tr></table></figure><h4 id="相关变量"><a href="#相关变量" class="headerlink" title="相关变量"></a>相关变量</h4><table><thead><tr><th style="text-align:center">变量名称</th><th>说明</th><th style="text-align:center">变量类型</th></tr></thead><tbody><tr><td style="text-align:center">COMP_CWORD</td><td>存放当前命令行中输入的所有单词的数组</td><td style="text-align:center">Array</td></tr><tr><td style="text-align:center">COMP_WORDS</td><td>当前输入的单词在<code>COMP_WORDS</code>中的索引</td><td style="text-align:center">Int</td></tr><tr><td style="text-align:center">COMPREPLY</td><td>由命令补全功能调用的 shell 函数产生的。记录候选补全结果的数组</td><td style="text-align:center">Array</td></tr><tr><td style="text-align:center">COMP_LINE</td><td>当前命令行输入字符</td><td style="text-align:center">String</td></tr><tr><td style="text-align:center">COMP_POINT</td><td>光标在当前命令行的位置</td><td style="text-align:center">Int</td></tr><tr><td style="text-align:center">COMP_WORDBREAKS</td><td>单词之间分割符</td><td style="text-align:center">String</td></tr><tr><td style="text-align:center">HOSTFILE</td><td>存储主机名的文件格式与<code>/etc/hosts</code>文件相同，如果定义该变量但是没有赋值，将尝试读取<code>/etc/hosts</code>文件</td><td style="text-align:center">String</td></tr><tr><td style="text-align:center">FIGNORE</td><td>一个冒号分隔的后缀名列表，一个后缀满足其中之一的文件名被排除在匹配的文件名之外。</td><td style="text-align:center">String</td></tr><tr><td style="text-align:center">GLOBIGNORE</td><td>一个冒号分隔的模式列表，定义了路径名扩展时要忽略的文件名集合。如果一个文件名与路径扩展模式匹配，同时匹配<code>GLOBIGNORE</code>中的一个模式时，它被从匹配列表中删除。</td><td style="text-align:center">String</td></tr></tbody></table><h4 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h4><p>1) 新建一个命令文件 <code>printv.sh</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一个参数</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$1</span></span><br></pre></td></tr></table></figure><p>2) 将脚本文件赋予执行权限</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@study]<span class="comment"># chmod +x printv.sh</span></span><br></pre></td></tr></table></figure><p>3) 创建命令提示脚本 <code>printv_completion.bash</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">_printv_function</span></span>()&#123;</span><br><span class="line">    <span class="built_in">local</span> cur=<span class="variable">$&#123;COMP_WORDS[COMP_CWORD]&#125;</span></span><br><span class="line">    COMPREPLY=( $(compgen -W <span class="string">&quot;help variable other&quot;</span> -- <span class="variable">$cur</span>) )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">complete -F _printv_function printv</span><br></pre></td></tr></table></figure><p>4) 将命令提示脚本赋权</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 赋予执行权限</span></span><br><span class="line">[root@study]<span class="comment"># chmod +x printv_completion.bash</span></span><br><span class="line"><span class="comment"># 加载到当前环境</span></span><br><span class="line">[root@study]<span class="comment"># source printv_completion.bash</span></span><br></pre></td></tr></table></figure><blockquote><p>该文件通常放在<code>/etc/bash_completion.d</code></p></blockquote><p>5) 测试命令提示功能</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输出 printv 命令，按连两下 Tab 键 将会出现如下提示</span></span><br><span class="line">[root@study]<span class="comment"># printv [Tab][Tab]</span></span><br><span class="line"><span class="built_in">help</span> variable other</span><br></pre></td></tr></table></figure><h4 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h4><ul><li><a href="%2Fcompgen命令_50.html">compgen 命令</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;complete&lt;/code&gt;是一个&lt;code&gt;bash&lt;/code&gt;内置命令，用于指定对每个名称的参数如何补全。它也是bash自动按两次TAB实现自动补全调用的命令。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;选项与参数：&quot;
+      
+    
+    </summary>
+    
+    
+      <category term="Bash" scheme="http://man.fcwalkers.com/tags/Bash/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>compgen 命令[50]</title>
+    <link href="http://man.fcwalkers.com/compgen%E5%91%BD%E4%BB%A4_50.html"/>
+    <id>http://man.fcwalkers.com/compgen命令_50.html</id>
+    <published>2022-06-15T16:00:00.000Z</published>
+    <updated>2022-07-25T09:34:46.050Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><code>compgen</code>是一个<code>bash</code>内置命令，可以显示所有可用的命令、别名和函数等。它也是<code>bash</code>自动按两次<code>TAB</code>实现自动补全调用的命令。</p></blockquote><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><p> 与<a href="%2Fcomplete命令_51.html">complete命令</a>选项相同，除了<code>-r</code>与<code>-p</code>选项。</p><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><strong>一般用法</strong></li></ul><p><code>compgen [选项] [词语]</code></p><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 显示系统所有用户名</span></span><br><span class="line">[root<span class="symbol">@study]</span><span class="meta"># compgen -u</span></span><br><span class="line">root</span><br><span class="line">bin</span><br><span class="line">daemon</span><br><span class="line">adm</span><br></pre></td></tr></table></figure><ul><li><strong>查询系统内以<code>ls</code>开头的命令</strong></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- 表示只生成相关单词的补全结果（有时可省略）</span></span><br><span class="line">[root@study]<span class="comment"># compgen -c -- ls</span></span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">lsof</span><br><span class="line">lsmod</span><br><span class="line">lsipc</span><br><span class="line">lsinitrd</span><br><span class="line">lsmem</span><br><span class="line">lsattr</span><br><span class="line">lsblk</span><br><span class="line">lslocks</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">lslogins</span><br><span class="line">lsscsi</span><br><span class="line">lsb_release</span><br><span class="line">lsns</span><br><span class="line">lscpu</span><br></pre></td></tr></table></figure><ul><li><strong>查询后台 jobs</strong></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@study]<span class="comment"># vi</span></span><br><span class="line"><span class="comment"># 进入 vi 后，按 ctrl + z，然后使用 -j 选项即可看见 job 名称</span></span><br><span class="line">[1]+  已停止               vi</span><br><span class="line">[root@study]<span class="comment"># compgen -j</span></span><br><span class="line">vi</span><br></pre></td></tr></table></figure><ul><li><strong>查询被启用的内建命令</strong></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@study]<span class="comment"># compgen -A enabled</span></span><br><span class="line">.</span><br><span class="line">:</span><br><span class="line">[</span><br><span class="line"><span class="built_in">alias</span></span><br><span class="line"><span class="built_in">bg</span></span><br><span class="line"><span class="built_in">bind</span></span><br></pre></td></tr></table></figure><ul><li><strong>在指定字符中添加前缀</strong></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前目录下文件</span></span><br><span class="line">[root@study]<span class="comment"># compgen -W &quot;bc dc ec&quot; -P a</span></span><br><span class="line">abc</span><br><span class="line">adc</span><br><span class="line">aec</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;compgen&lt;/code&gt;是一个&lt;code&gt;bash&lt;/code&gt;内置命令，可以显示所有可用的命令、别名和函数等。它也是&lt;code&gt;bash&lt;/code&gt;自动按两次&lt;code&gt;TAB&lt;/code&gt;实现自动补全调用的命令。&lt;/p&gt;
+&lt;/
+      
+    
+    </summary>
+    
+    
+      <category term="Bash" scheme="http://man.fcwalkers.com/tags/Bash/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>host 命令[49]</title>
+    <link href="http://man.fcwalkers.com/host%E5%91%BD%E4%BB%A4_49.html"/>
+    <id>http://man.fcwalkers.com/host命令_49.html</id>
+    <published>2021-12-06T16:00:00.000Z</published>
+    <updated>2022-06-16T07:00:30.694Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><code>host</code>是一个简单的<code>DNS</code>查询工具，它通常用于正向查询或反向查询。</p></blockquote><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><p>{name} 是要查询的域名，它也可以是一个点分割的<code>IPv4</code>地址或是一个冒号分割的<code>IPv6</code>地址。<br>[server] 是一个可选参数，它可以是名字服务器的名字或<code>IP</code>地址。指定后可以代替<code>/etc/resolv.conf</code>文件内的名字服务器。</p><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-a : 相当于设置 -<span class="type">v</span> 选项，并且要求 host 发送一个查询类型为 ANY 的请求。</span><br><span class="line">-C : 将尝试显示来自该区域所有列出的权威名称服务器的区域名称的 <span class="type">SOA</span> 记录。名称服务器列表由为该区域找到的 NS 记录定义。</span><br><span class="line">-c : 指定 <span class="type">DNS</span> 查询的类，默认值是 <span class="keyword">IN</span> 表示互联网。</span><br><span class="line">-d : 与 -<span class="type">v</span> 选项作用相同，用来显示详细信息。这两个选项都提供了向后兼容性。在前一个版本，-d 选项会切换到 debug 跟踪；-v 会启用详细输出。</span><br><span class="line">-i : 指定反向查询 <span class="type">IPv6</span> 的地址，应该使用 IP6.INT 域名。默认使用 IP6.ARPA。</span><br><span class="line">-<span class="number">4</span> / -<span class="number">6</span> : 强制使用 <span class="type">IPv4</span> / IPv6 地址查询。</span><br><span class="line">-t : 指定查询类型。如 <span class="type">CNAME</span>, NS, SOA, SIG, KEY, AXFR等。</span><br><span class="line">-r : 不使用递归查询。</span><br><span class="line">-s : 告诉主机，如果任何服务器响应<span class="type">SERVFAIL</span>响应，则不要将查询发送到下一个名称服务器，这与正常的存根解析程序行为相反。</span><br><span class="line">-W : 让主机等待秒数，如果小于1秒将被设置为1秒，如果在指定时间内域名服务器没有给出应答信息则退出。</span><br><span class="line">-w : 如果域名服务器没有给出应答信息，则总是等待，直到域名服务器给出应答。</span><br></pre></td></tr></table></figure><h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><p>  <em>/etc/resolv.conf</em></p><h3 id="查询类型"><a href="#查询类型" class="headerlink" title="查询类型"></a>查询类型</h3><p>参考<a href="http://blog.fcwalkers.com/2021/11/18/network/TCPIP协议—DNS域名系统/#查询问题">DNS查询类型</a></p><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><strong>一般用法</strong></li></ul><p><code>host [选项] &#123;name&#125; [server]</code></p><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">[root@study]</span># host <span class="keyword">man</span>.fcwalkers.com</span><br><span class="line"><span class="keyword">man</span>.fcwalkers.com has address 116.196.64.206</span><br></pre></td></tr></table></figure><ul><li><strong>查询邮件类型</strong></li></ul><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@study]]<span class="comment"># host -t MX fcwalkers.com</span></span><br><span class="line">fcwalkers.com mail <span class="keyword">is</span> handled <span class="keyword">by</span> <span class="number">10</span> mx.ym<span class="number">.163</span>.com.</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;host&lt;/code&gt;是一个简单的&lt;code&gt;DNS&lt;/code&gt;查询工具，它通常用于正向查询或反向查询。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;选项与参数：&quot;&gt;&lt;a href=&quot;#选项与参数：&quot; class=&quot;heade
+      
+    
+    </summary>
+    
+    
+      <category term="DNS" scheme="http://man.fcwalkers.com/tags/DNS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>locale 命令[48]</title>
+    <link href="http://man.fcwalkers.com/locale%E5%91%BD%E4%BB%A4_48.html"/>
+    <id>http://man.fcwalkers.com/locale命令_48.html</id>
+    <published>2021-12-05T16:00:00.000Z</published>
+    <updated>2022-06-16T07:00:21.910Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><code>locale</code>是多语言环境的设置接口，通过标准输出显示当前语言环境或所有语言环境。由<code>ANSI C</code>提供支持。</p></blockquote><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><p>当无参数调用时，显示当前语言环境设置的每个区域类别。</p><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-a : 显示所有有效的语言环境列表。</span></span><br><span class="line"><span class="deletion">-m : 显示有效的字符映射表(字符集合描述文件)。</span></span><br><span class="line"><span class="deletion">-c : 显示出语言环境的类别名称（或关键字）及其设置的值。</span></span><br><span class="line"><span class="deletion">-k : 显示出关键字参数，格式为 &quot;keyword=value&quot;。</span></span><br><span class="line"><span class="deletion">-v : 显示出额外的信息，与其他选项组合使用。如与 -a 选项一起使用。</span></span><br></pre></td></tr></table></figure><h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><p>  <em>/usr/lib/locale/locale-archive 言环境默认归档文件，创建的<code>locale</code>会自动添加进此文件</em><br>  <em>/usr/share/i18n/locales 语言环境定义文件默认路径</em></p><h3 id="类别"><a href="#类别" class="headerlink" title="类别"></a>类别</h3><p><code>locale</code>按照所涉及到的文化传统的各个方面分成12个大类：</p><table><thead><tr><th style="text-align:center">类别名称</th><th style="text-align:left">描述</th></tr></thead><tbody><tr><td style="text-align:center">LC_CTYPE</td><td style="text-align:left">语言符号及其分类</td></tr><tr><td style="text-align:center">LC_NUMERIC</td><td style="text-align:left">数字</td></tr><tr><td style="text-align:center">LC_COLLATE</td><td style="text-align:left">比较和排序习惯</td></tr><tr><td style="text-align:center">LC_TIME</td><td style="text-align:left">时间显示格式</td></tr><tr><td style="text-align:center">LC_MONETARY</td><td style="text-align:left">货币单位</td></tr><tr><td style="text-align:center">LC_MESSAGES</td><td style="text-align:left">信息主要是提示信息,错误信息,状态信息,标题,标签,按钮和菜单等</td></tr><tr><td style="text-align:center">LC_NAME</td><td style="text-align:left">姓名书写方式</td></tr><tr><td style="text-align:center">LC_ADDRESS</td><td style="text-align:left">地址书写方式</td></tr><tr><td style="text-align:center">LC_TELEPHONE</td><td style="text-align:left">电话号码书写方式</td></tr><tr><td style="text-align:center">LC_MEASUREMENT</td><td style="text-align:left">度量衡表达方式</td></tr><tr><td style="text-align:center">LC_PAPER</td><td style="text-align:left">默认纸张尺寸大小</td></tr><tr><td style="text-align:center">LC_IDENTIFICATION</td><td style="text-align:left">对locale自身包含信息的概述</td></tr></tbody></table><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><strong>一般用法</strong></li></ul><p><code>locale [选项] [关键字|类别]</code></p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@study]<span class="comment"># locale</span></span><br><span class="line">LANG=zh_CN.UTF-8</span><br><span class="line">LC_CTYPE=<span class="string">&quot;zh_CN.UTF-8&quot;</span></span><br><span class="line">LC_NUMERIC=<span class="string">&quot;zh_CN.UTF-8&quot;</span></span><br><span class="line">...省略</span><br></pre></td></tr></table></figure><ul><li>显示当前语言环境字符设置</li></ul><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@study]</span><span class="meta"># locale -c charmap</span></span><br><span class="line">LC_CTYPE <span class="meta"># 类别名称</span></span><br><span class="line">UTF<span class="number">-8</span>    <span class="meta"># 设置的值</span></span><br></pre></td></tr></table></figure><ul><li>显示当前系统时间环境设置</li></ul><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@study]<span class="comment"># locale -ck date_fmt</span></span><br><span class="line">LC_TIME                                   <span class="comment"># 类别名称</span></span><br><span class="line">date_fmt=<span class="string">&quot;%Y年 %m月 %d日 %A %H:%M:%S %Z&quot;</span>  <span class="comment"># 关键字=值</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;locale&lt;/code&gt;是多语言环境的设置接口，通过标准输出显示当前语言环境或所有语言环境。由&lt;code&gt;ANSI C&lt;/code&gt;提供支持。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;选项与参数：&quot;&gt;&lt;a href=&quot;#选
+      
+    
+    </summary>
+    
+    
+      <category term="语言环境" scheme="http://man.fcwalkers.com/tags/%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>arp 命令[47]</title>
+    <link href="http://man.fcwalkers.com/arp%E5%91%BD%E4%BB%A4_47.html"/>
+    <id>http://man.fcwalkers.com/arp命令_47.html</id>
+    <published>2021-10-11T16:00:00.000Z</published>
+    <updated>2021-10-12T10:39:26.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><code>arp</code>命令用于或显示操作系统 IPv4 相邻网络地址的缓存。它也可以用于向缓存表中添加、删除类目。该命令已废弃，建议使用<code>ip neigh</code>命令代替。<br>ARP 是标准的地址解析协议，用于查找 IPv4地址到对应硬件地址之间的动态映射。</p></blockquote><h4 id="模式："><a href="#模式：" class="headerlink" title="模式："></a>模式：</h4><p>arp 不指定模式时，将打印缓存表条目，还可以通过指定硬件地址的类型、接口名或主机地址来限制打印的条目。</p><p><code>arp -d &lt;address&gt;</code> 删除指定地址的 arp 条目。address 需要是一个 IP 地址，如果给定的是主机名，它将在查找 arp 条目之前被解析。此模式需要管理员权限。</p><p><code>arp -s &lt;address&gt; &lt;hw_addr&gt; [flag]</code> 添加一个新 arp 条目。硬件地址(hw_addr)参数格式取决于赖硬件类型即<code>-t</code>选项，默认是 Ethernet 类型的6个字节的16位冒号分割的表示法。<br>添加代理 arp 时，可以为整个子网的代理 arp 指定网络掩码，通过<code>-Ds</code>选项可以执行该操作。<br>flag 是可选项，如果未设置标志为<code>temp</code>，则添加的条目永久存储到 ARP 缓存中。</p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-v : 显示详细的 <span class="type">ARP</span> 缓冲区条目。</span><br><span class="line">-n : 显示数字的地址代替符号类的主机名、端口名或用户名。</span><br><span class="line">-H,-t &lt;<span class="keyword">type</span>&gt; : 当设置或读取 <span class="type">ARP</span> 缓存时，这是个可选参数，用于指定地址类型，默认值为 ether。</span><br><span class="line">-a : 使用 <span class="type">BSD</span> 风格格式化输出（没有固定列）。</span><br><span class="line">-e : 使用 <span class="type">Linux</span> 风格格式化输出（有固定列）。</span><br><span class="line">-D : 使用网络接口的网络掩码地址作为硬件地址添加 <span class="type">arp</span> 条目，通常用于代理 ARP。</span><br><span class="line">-i : 指定操作条目的网络接口。</span><br><span class="line">-f &lt;filename&gt; : 与 -<span class="type">s</span> 类似，添加条目信息取自指定文件，用于设置条目较多时，批量添加。如果不指定文件名，默认是 /etc/ethers。</span><br></pre></td></tr></table></figure><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><strong>一般用法</strong></li></ul><p><code>arp [模式|选项] [标志]</code></p><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 添加临时代理 ARP</span></span><br><span class="line">[root<span class="symbol">@study]</span><span class="meta"># arp -Ds 140.252.1.29  140.252.1 temp</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;arp&lt;/code&gt;命令用于或显示操作系统 IPv4 相邻网络地址的缓存。它也可以用于向缓存表中添加、删除类目。该命令已废弃，建议使用&lt;code&gt;ip neigh&lt;/code&gt;命令代替。&lt;br&gt;ARP 是标准的地址解析协议，用于查找 I
+      
+    
+    </summary>
+    
+    
+      <category term="IP" scheme="http://man.fcwalkers.com/tags/IP/"/>
+    
+      <category term="MAC" scheme="http://man.fcwalkers.com/tags/MAC/"/>
+    
+      <category term="ARP" scheme="http://man.fcwalkers.com/tags/ARP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>date命令[46]</title>
+    <link href="http://man.fcwalkers.com/date%E5%91%BD%E4%BB%A4_46.html"/>
+    <id>http://man.fcwalkers.com/date命令_46.html</id>
+    <published>2021-04-20T16:00:00.000Z</published>
+    <updated>2021-04-21T08:33:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>打印和设置日期或时间。</p></blockquote><h4 id="选项与参数"><a href="#选项与参数" class="headerlink" title="选项与参数"></a>选项与参数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-d,--<span class="built_in">date</span>=STRING : 显示指定的字符串时间。</span><br><span class="line">-f,--file=DATEFILE : 类似 --<span class="built_in">date</span> 显示文件中的每一行时间。</span><br><span class="line">-I[TIMESPEC],--iso-8601[=TIMESPEC] : 输出国际标准 ISO 8601 格式的日期/时间。其中 TIMESPEC 可选值有: <span class="string">&#x27;date&#x27;</span>,<span class="string">&#x27;hours&#x27;</span>, <span class="string">&#x27;minutes&#x27;</span>, <span class="string">&#x27;seconds&#x27;</span>, or <span class="string">&#x27;ns&#x27;</span> (默认为 <span class="string">&#x27;date&#x27;</span>)。</span><br><span class="line">-r : 显示文件最后的更新时间(mtime)。</span><br><span class="line">-R,--rfc-2822 : 输出 RFC 2822 格式的日期或时间。</span><br><span class="line">--rfc-3339=TIMESPEC : 输出 RFC 3339 格式或日期。TIMESPEC=<span class="string">&#x27;date&#x27;</span>, <span class="string">&#x27;seconds&#x27;</span>, or <span class="string">&#x27;ns&#x27;</span>。日期与时间用一个空格分隔。</span><br><span class="line">-s,--<span class="built_in">set</span>=STRING : 通过给定字符串设定日期和时间。</span><br><span class="line">-u,--utc : 打印或设置 utc 时间。</span><br></pre></td></tr></table></figure><h4 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h4><p>格式化控制输出，具体含义如下：</p><p><code>%%</code> 输出 % 符号<br><code>%a</code> 本地设置的星期名缩写(如 Sun)<br><code>%A</code> 本地设置的星期名全名(如 Sunday)<br><code>%b</code> 本地设置的月名缩写(如 Jan)<br><code>%B</code> 本地设置的月名全名(如 January)<br><code>%c</code> 本地设置的日期和时间<br><code>%C</code> 世纪<br><code>%d</code> 月中的天<br><code>%D</code> 日期，相当于 %m/%d/%y。<br><code>%e</code> 月中的天，以空格填充，相当于 %_d。<br><code>%F</code> 全日期，相当于%Y-%m-%d。<br><code>%g</code> 年的ISO周日历最后两位数字。<br><code>%G</code> 年的ISO周日历，通常只对 %V 有用。<br><code>%h</code> 相当于 %b<br><code>%H</code> 24进制小时(01..23)<br><code>%I</code> 12进制小时(01..12)<br><code>%j</code> 年中的天数(001..366)<br><code>%k</code> 24进制小时，以空格填充，相当于 %_H。<br><code>%l</code> 12进制小时，以空格填充，相当于 %_I。<br><code>%m</code> 月(01..12)<br><code>%M</code> 分钟(00..59)<br><code>%n</code> 换行<br><code>%N</code> 纳秒(000000000..999999999)<br><code>%p</code> 本地设置的 AM/PM，不确定输出空白符。<br><code>%P</code> 与 %p 类似，但是以小写字母输出。<br><code>%r</code> 本地设置的12进制时间(如：下午 03时51分53秒)<br><code>%R</code> 24进制显示时间和分钟，相当于 %H:%M。<br><code>%s</code> 自协调世界时1970年01月01日00时00分以来的秒数<br><code>%S</code> 秒数(00.60)<br><code>%t</code> tab<br><code>%T</code> 24进制显示时间，相当于 %H:%M:%S。<br><code>%u</code> 周中的天(1..7)，1为星期一。<br><code>%U</code> 年中的周，周日作为一周的第一天(00..53)。<br><code>%V</code> ISO周日历，周一作为一周的第一天(01..53)。<br><code>%w</code> 周中的天(0..6)，0为周日。<br><code>%W</code> 年中的周，周一作为一周的第一天(00..53)。<br><code>%x</code> 本地设置的日期表示(如：下午2021年04月21日)<br><code>%X</code> 本地设置的时间表示(如：下午16时06分23秒)<br><code>%y</code> 年的最后两位数字<br><code>%Y</code> 年<br><code>%z</code> ±hhmm 数值时区(如：0800)<br><code>%:z</code> ±hh:mm 数值时区(如：08:00)<br><code>%::z</code> ±hh:mm:ss 数值时区(如：08:00:00)<br><code>%Z</code> 字母时区缩写</p><p>日期的默认填充是数字形式的0,通过在 % 后面追加字符可以更换填充方式：</p><p><code>-</code> 不填充<br><code>_</code> 以空格填充<br><code>0</code> 以 0 填充<br><code>^</code> 如果可能，使用大写填充<br><code>#</code> 如果可能，使用相反的大小写填充。</p><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><p><strong>一般用法</strong></p><p>  <code>date [选项] [+格式]</code></p>  <figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 显示指定日期</span></span><br><span class="line">[root<span class="symbol">@study</span> ~]<span class="meta"># date -d <span class="string">&quot;20200102&quot;</span></span></span><br><span class="line"><span class="number">2020</span>年 <span class="number">01</span>月 <span class="number">02</span>日 星期四 <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> CST</span><br><span class="line"></span><br><span class="line"><span class="meta"># 显示指定日期时间</span></span><br><span class="line">[root<span class="symbol">@study</span> ~]<span class="meta">#  date -d <span class="string">&quot;20200102 15:30&quot;</span></span></span><br><span class="line"><span class="number">2020</span>年 <span class="number">01</span>月 <span class="number">02</span>日 星期四 <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span> CST</span><br></pre></td></tr></table></figure></li><li><p><strong>显示指定文件日期</strong></p>  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@study</span> <span class="string">~</span>]<span class="comment"># cat datefile</span></span><br><span class="line"><span class="number">20201230</span></span><br><span class="line"><span class="number">1999-8</span><span class="number">-1</span> <span class="number">13</span><span class="string">:30:30</span></span><br><span class="line"></span><br><span class="line">[<span class="string">root@JD</span> <span class="string">~</span>]<span class="comment"># date -f datefile</span></span><br><span class="line"><span class="number">2020</span><span class="string">年</span> <span class="number">12</span><span class="string">月</span> <span class="number">30</span><span class="string">日</span> <span class="string">星期三</span> <span class="number">00</span><span class="string">:00:00</span> <span class="string">CST</span></span><br><span class="line"><span class="number">1999</span><span class="string">年</span> <span class="number">08</span><span class="string">月</span> <span class="number">01</span><span class="string">日</span> <span class="string">星期日</span> <span class="number">13</span><span class="string">:30:30</span> <span class="string">CST</span></span><br></pre></td></tr></table></figure></li><li><p><strong>格式化日期</strong></p>  <figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@study</span> ~]<span class="meta"># date +<span class="string">&quot;%F %T&quot;</span></span></span><br><span class="line"><span class="number">2021</span><span class="number">-04</span><span class="number">-21</span> <span class="number">16</span>:<span class="number">31</span>:<span class="number">23</span></span><br></pre></td></tr></table></figure></li><li><p><strong>日期填充</strong></p>  <figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 默认填充</span></span><br><span class="line">[root<span class="symbol">@JD</span> ~]<span class="meta"># date +%m</span></span><br><span class="line"><span class="number">04</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 无填充</span></span><br><span class="line">[root<span class="symbol">@JD</span> ~]<span class="meta"># date +%-m</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 空格填充</span></span><br><span class="line">[root<span class="symbol">@JD</span> ~]<span class="meta"># date +%_m</span></span><br><span class="line"> <span class="number">4</span></span><br></pre></td></tr></table></figure></li></ul><h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><ul><li><strong>GMT(Greenwich Mean Time)</strong><br>  指位于英国伦敦郊区的皇家格林威治天文台的标准时间。地球按经度分成 <code>24</code> 个区，每个区有自己当下时间，比如中国就在东 <code>8</code> 区，代号 <code>+8</code>。向东走一个区（日本，东九区），手表就要调快一个小时。</li><li><strong>UTC(Coordinated Universal Time)</strong><br>  世界标准时间或世界协调时间。<code>GMT</code> 并不精准，于是以 <code>GMT</code> 为准加上修正而成的时间，被称作为 <code>UT</code>，一般对于我们来说，这两个值没有差别。早年的 <code>PC</code> 都是 <code>GMT</code>，后来换成了 <code>UT</code> 时间。</li><li><strong>CST(China Standard Time)</strong><br>  中国标准时间。也就是北京时间，我国是属东八区，转成 <code>UTC</code>，加上 <code>+8</code> 的时区表示即可。</li></ul><hr><ul><li><strong>RFC 2822(Internet Message Format)</strong><br>  RFC2822标准格式 <code>day-of-week DD month-name YYYY HH:mm:ss ±hhmm</code>，如：<code>Wed, 21 Apr 2021 14:30:37 +0800</code></li><li><strong>ISO 8601</strong><br>  国际标准 ISO 8601 格式 <code>YYYY-MM-DDTHH:mm:ss[Z|±hh:mm]</code>。日期与时间之间用 <code>T</code> 分割，当前如果在 <code>UTC</code> 标准时区时最后加字母 <code>Z</code>，其他时区用实际时间差表示。如北京时间 <code>2021-04-21T14:51:56+0800</code></li></ul><hr><ul><li><strong>ISO周日历</strong><br>  请参考<a href="https://zh.wikipedia.org/wiki/ISO%E9%80%B1%E6%97%A5%E6%9B%86">ISO周日历</a>。</li></ul><hr><ul><li><strong>文件时间</strong><br>  关于文件时间请阅读 <a href="%2Fls命令_13.html#扩展">ls</a> 命令扩展内容。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;打印和设置日期或时间。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;选项与参数&quot;&gt;&lt;a href=&quot;#选项与参数&quot; class=&quot;headerlink&quot; title=&quot;选项与参数&quot;&gt;&lt;/a&gt;选项与参数&lt;/h4&gt;&lt;figure class=&quot;
+      
+    
+    </summary>
+    
+    
+      <category term="日期" scheme="http://man.fcwalkers.com/tags/%E6%97%A5%E6%9C%9F/"/>
+    
+      <category term="时间" scheme="http://man.fcwalkers.com/tags/%E6%97%B6%E9%97%B4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>cal命令[45]</title>
+    <link href="http://man.fcwalkers.com/cal%E5%91%BD%E4%BB%A4_45.html"/>
+    <id>http://man.fcwalkers.com/cal命令_45.html</id>
+    <published>2021-04-18T16:00:00.000Z</published>
+    <updated>2021-04-21T08:38:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>显示一个简单日历，如果没有任何参数指定，将显示当前月。</p></blockquote><h4 id="选项与参数"><a href="#选项与参数" class="headerlink" title="选项与参数"></a>选项与参数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-1 : 显示一个月日历的输出（默认选项）。</span><br><span class="line">-3 : 显示当前月、前一个月、后一个月的日历输出。</span><br><span class="line">-s : 使用星期日作为一周的第一天。</span><br><span class="line">-m : 使用星期一作为一周的第一天。</span><br><span class="line">-j : 显示儒略日期（即当年的中的天数，从每年的1月1日开始计算）。</span><br><span class="line">-y : 显示当前年份日历。</span><br></pre></td></tr></table></figure><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><p><strong>一般用法</strong></p><p>  <code>cal [选项] [[[天] 月] 年]</code></p>  <figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示当前月份日历</span></span><br><span class="line">[root@study ~]<span class="comment"># cal</span></span><br><span class="line">      四月 2021</span><br><span class="line">日 一 二 三 四 五 六</span><br><span class="line">           1 <span class="number"> 2 </span> 3</span><br><span class="line">4 <span class="number"> 5 </span><span class="number"> 6 </span><span class="number"> 7 </span><span class="number"> 8 </span><span class="number"> 9 </span>10</span><br><span class="line">11<span class="number"> 12 </span>13<span class="number"> 14 </span>15<span class="number"> 16 </span>17</span><br><span class="line">18<span class="number"> 19 </span>20<span class="number"> 21 </span>22<span class="number"> 23 </span>24</span><br><span class="line">25<span class="number"> 26 </span>27<span class="number"> 28 </span>29 30</span><br></pre></td></tr></table></figure></li><li><p><strong>显示指定(年/月/日)日历</strong></p>  <figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]<span class="comment"># cal 20 4 2021</span></span><br><span class="line">         四月 2021</span><br><span class="line">日 一 二 三 四 五 六</span><br><span class="line">            <span class="number"> 1 </span><span class="number"> 2 </span> 3</span><br><span class="line">4 <span class="number"> 5 </span><span class="number"> 6 </span><span class="number"> 7 </span><span class="number"> 8 </span><span class="number"> 9 </span>10</span><br><span class="line">11<span class="number"> 12 </span>13<span class="number"> 14 </span>15<span class="number"> 16 </span>17</span><br><span class="line">18<span class="number"> 19 </span>20<span class="number"> 21 </span>22<span class="number"> 23 </span>24</span><br><span class="line">25<span class="number"> 26 </span>27<span class="number"> 28 </span>29 30</span><br><span class="line"></span><br></pre></td></tr></table></figure></li><li><p><strong>显示指定月份天数</strong></p>  <figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]<span class="comment"># cal -j 4 2021</span></span><br><span class="line">         四月 2021</span><br><span class="line">   日  一  二  三  四  五  六</span><br><span class="line">                  <span class="number"> 91 </span><span class="number"> 92 </span> 93</span><br><span class="line">94 <span class="number"> 95 </span><span class="number"> 96 </span><span class="number"> 97 </span><span class="number"> 98 </span><span class="number"> 99 </span>100</span><br><span class="line">101<span class="number"> 102 </span>103<span class="number"> 104 </span>105<span class="number"> 106 </span>107</span><br><span class="line">108<span class="number"> 109 </span>110<span class="number"> 111 </span>112<span class="number"> 113 </span>114</span><br><span class="line">115<span class="number"> 116 </span>117<span class="number"> 118 </span>119 120</span><br></pre></td></tr></table></figure></li></ul><h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><ul><li><strong>儒略日期</strong><br><a href="https://zh.wikipedia.org/wiki/%E5%84%92%E7%95%A5%E6%97%A5">儒略日期</a>，是以格林威治标准时中午12:00的儒略日加上那一天的瞬时时间的分数。儒略日期是儒略日添加小数部分所表示的儒略日数。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;显示一个简单日历，如果没有任何参数指定，将显示当前月。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;选项与参数&quot;&gt;&lt;a href=&quot;#选项与参数&quot; class=&quot;headerlink&quot; title=&quot;选项与参数&quot;&gt;&lt;/a&gt;选项与参数&lt;/h4
+      
+    
+    </summary>
+    
+    
+      <category term="日历" scheme="http://man.fcwalkers.com/tags/%E6%97%A5%E5%8E%86/"/>
+    
+      <category term="日期" scheme="http://man.fcwalkers.com/tags/%E6%97%A5%E6%9C%9F/"/>
+    
+      <category term="时间" scheme="http://man.fcwalkers.com/tags/%E6%97%B6%E9%97%B4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>watch命令[44]</title>
+    <link href="http://man.fcwalkers.com/watch%E5%91%BD%E4%BB%A4_44.html"/>
+    <id>http://man.fcwalkers.com/watch命令_44.html</id>
+    <published>2021-04-18T16:00:00.000Z</published>
+    <updated>2021-04-19T11:24:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>周期性的执行程序，并全屏显示输出或者错误。可以动态观察程序不同时间的输出结果。默认每2秒运行一次，直到被手动中断为止。</p></blockquote><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-d : 高亮显示变化区域</span><br><span class="line">-n : 设置间隔时间</span><br><span class="line">-p : 精确模式，每次运行命令尝试使用ntptime保持时间准确性。</span><br><span class="line">-t : 关闭顶部标题(时间间隔、命令)的输出。</span><br><span class="line">-e : 命令错误时冻结更新，并在按下任意键后退出。</span><br><span class="line">-g : 当输出改变时自动退出。</span><br></pre></td></tr></table></figure><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><strong>一般用法</strong></li></ul><p><code>watch [选项] 命令</code></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 每秒执行一次 <span class="type">date</span> 命令</span><br><span class="line">[root<span class="variable">@study</span> <span class="operator">~</span>]# watch <span class="operator">-</span>n1 <span class="type">date</span></span><br><span class="line"><span class="keyword">Every</span> <span class="number">1.0</span>s: <span class="type">date</span>                                                                      Mon Apr <span class="number">19</span> <span class="number">19</span>:<span class="number">21</span>:<span class="number">41</span> <span class="number">2021</span></span><br><span class="line"></span><br><span class="line"><span class="number">2021</span>年 <span class="number">04</span>月 <span class="number">19</span>日 星期一 <span class="number">19</span>:<span class="number">21</span>:<span class="number">41</span> CST</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;周期性的执行程序，并全屏显示输出或者错误。可以动态观察程序不同时间的输出结果。默认每2秒运行一次，直到被手动中断为止。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;选项与参数：&quot;&gt;&lt;a href=&quot;#选项与参数：&quot; class=&quot;heade
+      
+    
+    </summary>
+    
+    
+      <category term="时间" scheme="http://man.fcwalkers.com/tags/%E6%97%B6%E9%97%B4/"/>
+    
+      <category term="观察" scheme="http://man.fcwalkers.com/tags/%E8%A7%82%E5%AF%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>exec 命令[43]</title>
+    <link href="http://man.fcwalkers.com/exec%E5%91%BD%E4%BB%A4_43.html"/>
+    <id>http://man.fcwalkers.com/exec命令_43.html</id>
+    <published>2020-06-14T16:00:00.000Z</published>
+    <updated>2022-07-26T10:04:23.734Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>该命令是<code>bash</code>的内建命令，用于执行一个命令，并且在执行时不启用新进程，当命令结束后就结束该进程。</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p><code>exec [选项] [-a 名称] [command [arguments]]</code></p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-c : 在一个空环境执行命令</span><br><span class="line">-l : 传递一个 `-` 作为第零个参数</span><br><span class="line">-a [名称]: 传递一个名称作为第零个参数</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;该命令是&lt;code&gt;bash&lt;/code&gt;的内建命令，用于执行一个命令，并且在执行时不启用新进程，当命令结束后就结束该进程。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;语法&quot;&gt;&lt;a href=&quot;#语法&quot; class=&quot;headerlink
+      
+    
+    </summary>
+    
+    
+      <category term="Bash" scheme="http://man.fcwalkers.com/tags/Bash/"/>
+    
+      <category term="内建命令" scheme="http://man.fcwalkers.com/tags/%E5%86%85%E5%BB%BA%E5%91%BD%E4%BB%A4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>tee 命令[42]</title>
+    <link href="http://man.fcwalkers.com/tee%E5%91%BD%E4%BB%A4_42.html"/>
+    <id>http://man.fcwalkers.com/tee命令_42.html</id>
+    <published>2020-06-14T16:00:00.000Z</published>
+    <updated>2022-07-15T09:02:02.950Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>该命令从标准输入(stdin) 读取并且写入到标准输出(stdout)，同时可以将内容输出成文件。</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p><code>tee [OPTION]... [FILE]...</code></p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">参数：</span><br><span class="line">FILE 输出的文件，可以是多个。如果指定 - 表示到标准输出。</span><br><span class="line">选项：　</span><br><span class="line">-<span class="selector-tag">a</span>, <span class="attr">--append</span> 将内容追加到指定的文件(不覆盖)。</span><br><span class="line">-<span class="selector-tag">i</span>, <span class="attr">--ignore-interrupts</span> 忽略中断信号。</span><br><span class="line"></span><br></pre></td></tr></table></figure><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><strong>输出到标准输出(stdout)</strong></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@study /] <span class="built_in">ls</span> | <span class="built_in">tee</span></span><br><span class="line">bin</span><br><span class="line">boot</span><br><span class="line">dev</span><br><span class="line">etc</span><br><span class="line">home</span><br><span class="line">……省略</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;该命令从标准输入(stdin) 读取并且写入到标准输出(stdout)，同时可以将内容输出成文件。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;语法&quot;&gt;&lt;a href=&quot;#语法&quot; class=&quot;headerlink&quot; title=&quot;语法&quot;&gt;
+      
+    
+    </summary>
+    
+    
+      <category term="管线" scheme="http://man.fcwalkers.com/tags/%E7%AE%A1%E7%BA%BF/"/>
+    
+      <category term="文件" scheme="http://man.fcwalkers.com/tags/%E6%96%87%E4%BB%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>jhat 命令[39]</title>
+    <link href="http://man.fcwalkers.com/jhat%E5%91%BD%E4%BB%A4_39.html"/>
+    <id>http://man.fcwalkers.com/jhat命令_39.html</id>
+    <published>2020-06-07T16:00:00.000Z</published>
+    <updated>2020-06-08T02:34:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>JVM 命令， 配合 jmap 命令分析 Java 堆。 该命令是实验性的，在将来版本可能不受支持。 jhat内置了一个微型的HTTP/HTML服务器，生成dump的分析结果后，可以在浏览器中查看。jhat是一个耗时且耗费硬件资源的操作，建议将 dump 文件复制到本地进行分析，不要在服务器上直接进行分析。</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p><code>jhat [ options ] heap-dump-file</code></p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">参数：</span><br><span class="line">heap-dump-file 要浏览的 Java 二进制堆转储文件。对于包含多个堆转储的转储文件，可以通过在文件名后面追加 #&lt;number&gt; 方式指定文件。如 myfile.hprof#<span class="number">3</span></span><br><span class="line"></span><br><span class="line">选项：　</span><br><span class="line">-stack <span class="keyword">false</span>|<span class="keyword">true</span> 关闭跟踪对象分配调用堆栈。如果堆转储中没有可用的分配站点信息，则必须将此标志设置为<span class="keyword">false</span>。默认值为<span class="keyword">true</span>。</span><br><span class="line">-refs <span class="keyword">false</span>|<span class="keyword">true</span> 关闭对象引用跟踪。 默认值为 <span class="keyword">true</span>. 默认情况下, 返回的指针是指向其他特定对象的对象,如反向链接或输入引用, 会统计/计算堆中的所有对象。</span><br><span class="line">-port port-number 设置 jhat HTTP <span class="keyword">server</span> 的端口号. 默认值 <span class="number">7000</span>。</span><br><span class="line">-<span class="keyword">exclude</span> <span class="keyword">exclude</span>-file 指定对象查询时需要排除的数据成员列表文件，例如, 如果文件列列出了 java.lang.String.<span class="keyword">value</span> , 那么当从某个特定对象 <span class="keyword">Object</span> o 计算可达的对象列表时, 引用路径涉及 java.lang.String.<span class="keyword">value</span> 的都会被排除。</span><br><span class="line">-baseline <span class="keyword">exclude</span>-file 指定一个基准堆转储。 在两个 heap dumps 中有相同 <span class="keyword">object</span> ID 的对象会被标记为不是新的，其他对象被标记为新的。在比较两个不同的堆转储时很有用。</span><br><span class="line">-<span class="keyword">debug</span> <span class="type">int</span> 设置 <span class="keyword">debug</span> 级别。<span class="number">0</span> 表示不输出调试信息。 值越大则表示输出更详细的 <span class="keyword">debug</span> 信息。</span><br><span class="line">-Jflag 通过 flag 传入 JVM 启动参数来启动一个 JVM。如 -J-Xmx512m 使用最大堆内存为 <span class="number">512</span>MB。如果需要使用多个参数则传入多个 -Jxxxxxx 即可。</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;JVM 命令， 配合 jmap 命令分析 Java 堆。 该命令是实验性的，在将来版本可能不受支持。 jhat内置了一个微型的HTTP/HTML服务器，生成dump的分析结果后，可以在浏览器中查看。jhat是一个耗时且耗费硬件资源的操作，建议将 d
+      
+    
+    </summary>
+    
+    
+      <category term="JVM" scheme="http://man.fcwalkers.com/tags/JVM/"/>
+    
+      <category term="JAVA" scheme="http://man.fcwalkers.com/tags/JAVA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>jinfo 命令[41]</title>
+    <link href="http://man.fcwalkers.com/jinfo%E5%91%BD%E4%BB%A4_41.html"/>
+    <id>http://man.fcwalkers.com/jinfo命令_41.html</id>
+    <published>2020-06-07T16:00:00.000Z</published>
+    <updated>2020-06-08T03:25:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>JVM 命令，打印指定 Java 进程、核心文件或远程调试服务器配置信息。该命令是实验性的，在将来版本可能不受支持。</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p> jinfo [ options ] pid</p><p> jinfo [ options ] executable core</p><p> jinfo [ options ] [ server-id@ ] remote-hostname-or-IP</p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">参数：</span><br><span class="line">pid 通过 jps 命令列出的 Java 进程 ID。</span><br><span class="line">executable 生成核心的 dump Java 可执行文件。</span><br><span class="line">core 需要打印的核心文件。</span><br><span class="line">remote-hostname-<span class="keyword">or</span>-IP 远程调试的服务器主机名或 ip。</span><br><span class="line"><span class="keyword">server</span>-id 可选的唯一 id，如果多台调试服务器上运行相同的远程主机，可用此选项参数标识服务器。</span><br><span class="line"></span><br><span class="line">选项：　</span><br><span class="line"><span class="keyword">no</span>-<span class="keyword">option</span> 打印命令行标记和系统属性。</span><br><span class="line">-flags 打印传递给JVM的命令行标志。</span><br><span class="line">-sysprops 打印 Java 系统属性键值对。</span><br><span class="line">-flags <span class="type">name</span> 打印指定的命令行标志的值。</span><br><span class="line">-flag [+|-]<span class="type">name</span> 启用或禁用指定布尔类型的命令行标志。</span><br><span class="line">-flag [+|-]<span class="type">name</span> 设置指定命令行标志的值。</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;JVM 命令，打印指定 Java 进程、核心文件或远程调试服务器配置信息。该命令是实验性的，在将来版本可能不受支持。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;语法&quot;&gt;&lt;a href=&quot;#语法&quot; class=&quot;headerlink&quot; ti
+      
+    
+    </summary>
+    
+    
+      <category term="JVM" scheme="http://man.fcwalkers.com/tags/JVM/"/>
+    
+      <category term="JAVA" scheme="http://man.fcwalkers.com/tags/JAVA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>jstack 命令[40]</title>
+    <link href="http://man.fcwalkers.com/jstack%E5%91%BD%E4%BB%A4_40.html"/>
+    <id>http://man.fcwalkers.com/jstack命令_40.html</id>
+    <published>2020-06-07T16:00:00.000Z</published>
+    <updated>2020-06-08T03:05:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>JVM 命令， 打印Java进程、核心文件或远程调试服务器的Java线程堆栈跟踪。 该命令是实验性的，在将来版本可能不受支持。  用于定位线程出现长时间停顿的原因，如线程间死锁、死循环、请求外部资源导致的长时间等待。远程调用的服务器必须开启 jstatd，即虚拟机的jstat守护进程。</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p> jstack [ options ] pid</p><p> jstack [ options ] executable core</p><p> jstack [ options ] [ server-id@ ] remote-hostname-or-IP</p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">参数：</span><br><span class="line">pid 通过 <span class="keyword">jps </span>命令列出的 <span class="keyword">Java </span>进程 ID。</span><br><span class="line">executable 生成核心的 dump <span class="keyword">Java </span>可执行文件。</span><br><span class="line">core 需要打印的核心文件。</span><br><span class="line">remote-hostname-<span class="keyword">or-IP </span>远程调试的服务器主机名或 ip。</span><br><span class="line">server-id 可选的唯一 id，如果多台调试服务器上运行相同的远程主机，可用此选项参数标识服务器。</span><br><span class="line"></span><br><span class="line">选项：　</span><br><span class="line">-F 当正常输出请求不被响应时，强制输出线程堆栈。</span><br><span class="line">-l 除堆栈外，显示关于锁的附加信息。</span><br><span class="line">-m 打印具有<span class="keyword">java和本地C/C++框架的混合模式堆栈跟踪。 </span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;JVM 命令， 打印Java进程、核心文件或远程调试服务器的Java线程堆栈跟踪。 该命令是实验性的，在将来版本可能不受支持。  用于定位线程出现长时间停顿的原因，如线程间死锁、死循环、请求外部资源导致的长时间等待。远程调用的服务器必须开启 jst
+      
+    
+    </summary>
+    
+    
+      <category term="JVM" scheme="http://man.fcwalkers.com/tags/JVM/"/>
+    
+      <category term="JAVA" scheme="http://man.fcwalkers.com/tags/JAVA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>jmap 命令[38]</title>
+    <link href="http://man.fcwalkers.com/jmap%E5%91%BD%E4%BB%A4_38.html"/>
+    <id>http://man.fcwalkers.com/jmap命令_38.html</id>
+    <published>2020-06-04T16:00:00.000Z</published>
+    <updated>2020-06-08T03:06:51.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>JVM 命令，打印给定进程、核心文件或远程调试服务器的共享对象内存映射或堆内存详细信息。 该命令是实验性的，在将来版本可能不受支持。目前这个命令不支持 Window 和 Linux Itanium 平台。远程调用的服务器必须开启 jstatd，即虚拟机的jstat守护进程。 </p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p><code>jmap [ option ] pid</code></p><p><code>jmap [ option ] executable core</code></p><p><code>jmap [ option ] [ server-id@ ] remote-hostname-or-IP</code></p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">参数：</span><br><span class="line">option  通常为后面常用选项，各个选项是互斥的。</span><br><span class="line">pid 通过 <span class="keyword">jps </span>命令列出的 <span class="keyword">Java </span>进程 ID。</span><br><span class="line">executable 生成核心的 dump <span class="keyword">Java </span>可执行文件。</span><br><span class="line">core 需要打印的核心文件。</span><br><span class="line">remote-hostname-<span class="keyword">or-IP </span>远程调试的服务器主机名或 ip。</span><br><span class="line">server-id 可选的唯一 id，如果多台调试服务器上运行相同的远程主机，可用此选项参数标识服务器。</span><br><span class="line"></span><br><span class="line">选项：　</span><br><span class="line">无选项  没有任何选项将打印加载到目标 <span class="keyword">JVM </span>中的每个共享对象映射的起始地址、大小和全路径。</span><br><span class="line">-dump:[live,] format=<span class="keyword">b, </span>file=filename 格式化转储堆到指定 filename 文件中。当指定可选子选项 live 时仅转储活动的对象。可以使用 <span class="keyword">jhat </span>命令浏览转储的文件。</span><br><span class="line">-finalizerinfo 打印在等待Finalizer线程执行finalizer方法的对象。</span><br><span class="line">-heap 打印<span class="keyword">Java堆详细信息。当指定可选子选项 </span>live 时仅统计活动对象数量。</span><br><span class="line">-histo[:live] 显示堆中对象的统计信息。</span><br><span class="line">-F  当-dump没有响应时，强制生成dump快照。live 子选项不支持此模式。</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;JVM 命令，打印给定进程、核心文件或远程调试服务器的共享对象内存映射或堆内存详细信息。 该命令是实验性的，在将来版本可能不受支持。目前这个命令不支持 Window 和 Linux Itanium 平台。远程调用的服务器必须开启 jstatd，即虚
+      
+    
+    </summary>
+    
+    
+      <category term="JVM" scheme="http://man.fcwalkers.com/tags/JVM/"/>
+    
+      <category term="JAVA" scheme="http://man.fcwalkers.com/tags/JAVA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>jps 命令[36]</title>
+    <link href="http://man.fcwalkers.com/jps%E5%91%BD%E4%BB%A4_36.html"/>
+    <id>http://man.fcwalkers.com/jps命令_36.html</id>
+    <published>2020-06-03T16:00:00.000Z</published>
+    <updated>2020-06-08T03:06:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>JVM 进程状态工具命令，该命令将展示本地虚拟机进程的标识符、进程名称和 ID。</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p><code>jps [options] [hostid]</code></p><p>不指定 hostid 默认是 localhost。远程调用的服务器必须开启 jstatd，即虚拟机的jstat守护进程。</p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-q 只输出 LVMID(进程唯一 ID)</span></span><br><span class="line"><span class="deletion">-m 输出 JVM 启动时传递给 main 函数的参数 </span></span><br><span class="line"><span class="deletion">-l 输出主类全名或 jar 文件全路径</span></span><br><span class="line"><span class="deletion">-v 输出 JVM 启动时指定的 JVM 参数</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;JVM 进程状态工具命令，该命令将展示本地虚拟机进程的标识符、进程名称和 ID。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;语法&quot;&gt;&lt;a href=&quot;#语法&quot; class=&quot;headerlink&quot; title=&quot;语法&quot;&gt;&lt;/a&gt;语法&lt;/h
+      
+    
+    </summary>
+    
+    
+      <category term="JVM" scheme="http://man.fcwalkers.com/tags/JVM/"/>
+    
+      <category term="JAVA" scheme="http://man.fcwalkers.com/tags/JAVA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>jstat 命令[37]</title>
+    <link href="http://man.fcwalkers.com/jstat%E5%91%BD%E4%BB%A4_37.html"/>
+    <id>http://man.fcwalkers.com/jstat命令_37.html</id>
+    <published>2020-06-03T16:00:00.000Z</published>
+    <updated>2022-06-20T07:00:29.490Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>JVM 资源和性能进行实时监控工具，它可以显示本地或者远程虚拟机进程中的类装载、内存、垃圾收集、jit编译等运行数据。该命令是实验性的，在将来的版本可能不受支持。这个命令目前在 Windows98 和 Windows ME 上无效。远程调用的服务器必须开启 jstatd，即虚拟机的jstat守护进程。</p></blockquote><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p><code>jstat [ generalOption | outputOptions vmid [ interval [ s|ms ] [ count ] ] ]</code></p><p> 如果连接远程虚拟机 vmid 选项语法如下：<br><code>[protocol:][//]lvmid[@hostname][:port][/servername]</code><br><strong>protocol</strong>：通信协议，如果protocol和hostname都没有指定，那么默认使用特定于平台优化的本地协议；如果protocol没有指定，但指定了hostname，那么默认使用rmi协议。<br><strong>lvmid</strong>：是一个特定于平台的值，用于唯一标示系统上的JVM。通常与操作系统的进程ID相同，可使用jps或ps命令得到该值。<br><strong>hostname</strong>：目标主机的主机名或IP地址。如果没有指定该值，那么默认为本地主机。<br><strong>port</strong>：与远程主机通讯的端口。该值只控制远程协议，本地协议将忽略。对于rmi协议，如果不指定该值，那么将使用默认值1099。<br><strong>servername</strong>：根据实现的不同，参数含义不用。本地协议将忽略该值，对于rmi协议，该参数表示远程主机rmi服务名。</p><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">参数：</span><br><span class="line">generalOption 普通命令行选项。</span><br><span class="line">outputOptions 一个或多个输出选项。</span><br><span class="line">vmid 虚拟机标识符(本机通常是一个数字)。</span><br><span class="line">interval[s|ms] 指定数字间隔时间(默认毫秒)。</span><br><span class="line">count 指定输出统计信息的总行数，达到该行数命令自动终止(默认无穷大)。</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">-a abc</span><br><span class="line">-class 显示 ClassLoad 的相关信息；</span><br><span class="line">-compiler 显示JIT编译的相关信息；</span><br><span class="line">-gc 显示和gc相关的堆信息；</span><br><span class="line">-gccapacity 显示各个代的容量以及使用情况；</span><br><span class="line">-gccause 显示垃圾回收的相关信息（通-gcutil）,同时显示最后一次或当前正在发生的垃圾回收的诱因；</span><br><span class="line">-gcnew 显示新生代信息；</span><br><span class="line">-gcnewcapacity 显示新生代大小和使用情况；</span><br><span class="line">-gcold 显示老年代和永久代的信息；</span><br><span class="line">-gcoldcapacity 显示老年代的大小；</span><br><span class="line">-gcpermcapacity 显示永久代的大小;</span><br><span class="line">-gcutil 显示垃圾收集信息；</span><br><span class="line">-printcompilation 输出JIT编译的方法信息</span><br></pre></td></tr></table></figure><h4 id="状态说明"><a href="#状态说明" class="headerlink" title="状态说明"></a>状态说明</h4><ul><li><strong>class</strong></li></ul><table><thead><tr><th>列名</th><th>描述</th></tr></thead><tbody><tr><td>Loaded</td><td>加载类数量</td></tr><tr><td>Bytes</td><td>加载类数量大小(KB)</td></tr><tr><td>Unloaded</td><td>卸载类数量</td></tr><tr><td>Bytes</td><td>卸载类数量大小(KB)</td></tr><tr><td>Time</td><td>类加载和卸载消耗总时间(秒)</td></tr></tbody></table><ul><li><strong>compiler</strong></li></ul><table><thead><tr><th>列名</th><th>描述</th></tr></thead><tbody><tr><td>Compiled</td><td>执行的编译任务数量    </td></tr><tr><td>Failed</td><td>失败的编译任务数量    </td></tr><tr><td>Invalid</td><td>失效的编译任务数量    </td></tr><tr><td>Time</td><td>编译任务所消耗的总时间    </td></tr><tr><td>FailedType</td><td>上次编译失败的编译类型    </td></tr><tr><td>FailedMethod</td><td>上次编译失败的类名和方法</td></tr></tbody></table><ul><li><strong>gc</strong><br>C即Capacity 总容量，U即Used 已使用的容量</li></ul><table><thead><tr><th>列名</th><th>描述</th></tr></thead><tbody><tr><td>S0C</td><td>survivor0区的总容量</td></tr><tr><td>S1C</td><td>survivor1区的总容量</td></tr><tr><td>S0U</td><td>survivor0区已使用的容量</td></tr><tr><td>S1U</td><td>survivor1区已使用的容量</td></tr><tr><td>EC</td><td>Eden区的总容量</td></tr><tr><td>EU</td><td>Eden区已使用的容量</td></tr><tr><td>OC</td><td>Old区的总容量</td></tr><tr><td>OU</td><td>Old区已使用的容量</td></tr><tr><td>PC</td><td>当前perm的容量 (KB)</td></tr><tr><td>PU</td><td>perm的已使用容量 (KB)</td></tr><tr><td>YGC</td><td>新生代垃圾回收次数</td></tr><tr><td>YGCT</td><td>新生代垃圾回收时间</td></tr><tr><td>FGC</td><td>老年代垃圾回收次数(Full GC)</td></tr><tr><td>FGCT</td><td>老年代垃圾回收时间(Full GC)</td></tr><tr><td>GCT</td><td>垃圾回收总消耗时间</td></tr><tr><td>MC</td><td>方法区总容量</td></tr><tr><td>MU</td><td>方法区已使用容量</td></tr></tbody></table><ul><li><strong>gccapacity</strong><br>内存池分代和空间容量</li></ul><table><thead><tr><th>列名</th><th>描述</th></tr></thead><tbody><tr><td>NGCMN</td><td>新生代占用的最小容量 </td></tr><tr><td>NGCMX</td><td>新生代占用的最大容量</td></tr><tr><td>NGC</td><td>当前新生代容量</td></tr><tr><td>OGCMN</td><td>老年代占用的最小容量</td></tr><tr><td>OGCMX</td><td>老年代占用的最大容量</td></tr><tr><td>OGC</td><td>当前老年代容量 </td></tr><tr><td>PGCMN</td><td>永久代(perm)占用最小容量 </td></tr><tr><td>PGCMX</td><td>永久代(perm)占用最大容量</td></tr><tr><td>PGC</td><td>当前永久代(perm) 容量 </td></tr><tr><td>VGC</td><td>年青代垃圾回收次数 </td></tr></tbody></table><ul><li><strong>gccause</strong></li></ul><table><thead><tr><th>列名</th><th>描述</th></tr></thead><tbody><tr><td>LGCC</td><td>最近垃圾回收的原因</td></tr><tr><td>GCC</td><td>当前垃圾回收的原因</td></tr></tbody></table><ul><li><strong>gcnew</strong></li></ul><table><thead><tr><th>列名</th><th>描述</th></tr></thead><tbody><tr><td>TT</td><td>初始的对象在新生代中存活阈值</td></tr><tr><td>MTT</td><td>初始的对象在新生代中最大存活最大阈值(超过阈值没有被回收的，就会晋升到老年代中)</td></tr><tr><td>DSS</td><td>survivor区域大小 (KB)</td></tr></tbody></table><ul><li><strong>gcnewcapacity</strong></li></ul><table><thead><tr><th>列名</th><th>描述</th></tr></thead><tbody><tr><td>S0CMX</td><td>survivor0 最大容量</td></tr><tr><td>S1CMX</td><td>survivor1 最大容量</td></tr><tr><td>ECMX</td><td>eden 最大容量</td></tr></tbody></table><ul><li><strong>printcompilation</strong></li></ul><table><thead><tr><th>列名</th><th>描述</th></tr></thead><tbody><tr><td>Compiled</td><td>被执行的编译任务的数量</td></tr><tr><td>Size</td><td>方法字节码的字节数</td></tr><tr><td>Type</td><td>编译类型</td></tr><tr><td>Method</td><td>编译方法的类名和方法名。类名使用”/“ 代替 “.” 作为空间分隔符. 方法名是给出类的方法名. 格式是一致于HotSpot - XX:+PrintComplation 选项</td></tr></tbody></table><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 打印 JVM 进程相关信息</span><br><span class="line">[Windus@study ~]$ jps</span><br><span class="line"><span class="number">26546</span> jar</span><br><span class="line"><span class="number">1230</span> Jps</span><br><span class="line"></span><br><span class="line"># 每隔 <span class="number">5</span> 秒打印一次 gc(垃圾回收) 相关堆信息</span><br><span class="line">[Windus@study ~]$ jstat -gc <span class="number">26546 5000</span></span><br><span class="line"> S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT</span><br><span class="line"><span class="number">1728</span>.<span class="number">0 1728.0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">177</span>.<span class="number">2</span>  <span class="number">14336.0</span>   <span class="number">324</span>.<span class="number">9</span>    <span class="number">35460.0</span>    <span class="number">29010.8</span>   <span class="number">45952.0</span> <span class="number">44928.1</span> <span class="number">5248</span>.<span class="number">0 4998.3</span>    <span class="number">121</span>    <span class="number">0</span>.<span class="number">353</span>   <span class="number">4</span>      <span class="number">0</span>.<span class="number">272</span>    <span class="number">0</span>.<span class="number">625</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;JVM 资源和性能进行实时监控工具，它可以显示本地或者远程虚拟机进程中的类装载、内存、垃圾收集、jit编译等运行数据。该命令是实验性的，在将来的版本可能不受支持。这个命令目前在 Windows98 和 Windows ME 上无效。远程调用的服务器
+      
+    
+    </summary>
+    
+    
+      <category term="JVM" scheme="http://man.fcwalkers.com/tags/JVM/"/>
+    
+      <category term="JAVA" scheme="http://man.fcwalkers.com/tags/JAVA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>du命令[35]</title>
+    <link href="http://man.fcwalkers.com/du%E5%91%BD%E4%BB%A4_35.html"/>
+    <id>http://man.fcwalkers.com/du命令_35.html</id>
+    <published>2019-07-23T16:00:00.000Z</published>
+    <updated>2021-04-26T03:37:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>评估文件系统的磁盘使用量（常用在推估目录所占容量）,递归目录汇总每个文件的磁盘使用量。</p></blockquote><h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-<span class="number">0</span> : 不换行列出每个目录信息</span><br><span class="line">-a : 列出所有文件，不仅仅是目录(默认只列出目录)</span><br><span class="line"><span class="comment">--apparent-size : 打印文件或目录自身实际大小，而不是磁盘占用空间大小</span></span><br><span class="line">-B, <span class="comment">--block-size=SIZE : 打印前按照指定单位缩放大小。（如 `-BM` 就是 `MB`，即不到1M文件都显示1M）</span></span><br><span class="line">-c : 显示目录或文件占用的磁盘空间大小，同时还统计它们的总和。</span><br><span class="line">-D : 仅显示命令行列出的符号链接间接引用的文件大小。(如：间接引用文件是隐藏文件，则不会被计算在内)</span><br><span class="line">-L : 显示所有符号链接间接引用文件的大小。</span><br><span class="line">-d : 指定深度目录。（`－<span class="type">d0</span>` 相当于 `-s`)</span><br><span class="line"><span class="comment">--inodes : 列出 inode 使用量代替 block 使用量。</span></span><br><span class="line"><span class="comment">--time[=WORD] : 显示文件和目录的 mtime，WORD 可选值有 atime, access, use, ctime, status</span></span><br><span class="line">-h : 以易读方式显示文件大小</span><br><span class="line">-s : 仅显示总计，即当前目录的大小</span><br><span class="line">-S : 仅显示不包括子目录的总计，与`-<span class="type">s</span>`有区别</span><br><span class="line"><span class="comment">--exclude=PATTERN : 忽略 PATTERN 指定的文件</span></span><br><span class="line">-X, <span class="comment">--exclude-from=FILE : 忽略在文件中指定的目录</span></span><br></pre></td></tr></table></figure><h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul><li><strong>一般用法</strong></li></ul><p><code>du [选项] [目录或文件名]</code></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">文件从大到小排序</span></span><br><span class="line"><span class="meta prompt_">[root@study]# </span><span class="language-bash"><span class="built_in">du</span> -sh * |<span class="built_in">sort</span> -rh</span></span><br><span class="line">447M/root</span><br></pre></td></tr></table></figure><h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><ul><li><p><strong>文件(或目录)自身实际大小和占用磁盘空间大小的区别</strong> (–apparent-size)</p><p>文件大小是文件的实际大小，而占用空间是占硬盘的实际空间。以EXT2文件系统为例，一个data block为4K，如果一个文件只实际大小即使不到4K，也要占用4K磁盘空间; 如果一个文件实际大小为4K零1个节，也要占用8K的磁盘空间。此时就产生了文件的实际大小和占用磁盘空间大小的区别。</p><p>更多资料参考<a href="https://blog.fcwalkers.com/2017/09/29/Linux/%E7%A3%81%E7%9B%98%E4%B8%8E%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/">《磁盘与文件管理》</a></p></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;评估文件系统的磁盘使用量（常用在推估目录所占容量）,递归目录汇总每个文件的磁盘使用量。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;选项与参数：&quot;&gt;&lt;a href=&quot;#选项与参数：&quot; class=&quot;headerlink&quot; title=&quot;选项
+      
+    
+    </summary>
+    
+    
+      <category term="文件" scheme="http://man.fcwalkers.com/tags/%E6%96%87%E4%BB%B6/"/>
+    
+      <category term="磁盘" scheme="http://man.fcwalkers.com/tags/%E7%A3%81%E7%9B%98/"/>
+    
+  </entry>
+  
+</feed>

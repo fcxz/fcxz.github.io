@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>ps命令[24] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="观察,程序,进程," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-03-27
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    ps命令[24]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><code>ps</code>命令就是最基本同时也是非常强大的进程查看命令.使用该命令可以确定有哪些进程正在运行和运行的状态、进程是否结束、进程有没有僵尸、哪些进程占用了过多的资源等等。<code>ps</code>是显示的是瞬间进程的状态，并不是动态连续，如果想对进程进行实时监控应该使用<code>top</code>命令。</p>
+<p><code>ps</code>命令可以接收<code>UNIX</code>、<code>BSD</code>、<code>GNU</code>三种风格的参数，不同风格的参数可以混合使用，但可能会出现冲突。出于对不同风格的兼容的目的因此有许多选项，意义是相同的。</p>
+<p>默认情况下，<code>ps</code>命令默认展示当前用户同一终端下的所以调用程序。</p>
+</blockquote>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">UNIX风格 </span><span class="punctuation">: </span></span><br><span class="line"><span class="attribute">-A</span><span class="punctuation"> :</span> <span class="string">所有的进程均显示出来，与 -e 具有同样的效用</span></span><br><span class="line"><span class="attribute">-a</span><span class="punctuation"> :</span> <span class="string">显示所有终端机下的所有进程，包括其他用户的进程</span></span><br><span class="line"><span class="attribute">-u&lt;用户识别码&gt;</span><span class="punctuation"> :</span> <span class="string">列出属于该用户的程序的状况，也可使用用户名称来指定，与-U具有同样的效果。</span></span><br><span class="line"><span class="attribute">-f</span><span class="punctuation"> :</span> <span class="string">显示更为完整的输出</span></span><br><span class="line"><span class="attribute">-p</span><span class="punctuation"> :</span> <span class="string">通过空白符或逗号分割pid显示指定程序(ps -p &quot;1 2&quot;或ps -p 1,2)</span></span><br><span class="line"><span class="attribute">-u</span><span class="punctuation"> :</span> <span class="string">显示指定用户的程序</span></span><br><span class="line"><span class="attribute">-l</span><span class="punctuation"> :</span> <span class="string">显示长格式(经常与-y一起使用)</span></span><br><span class="line"><span class="attribute">-y</span><span class="punctuation"> :</span> <span class="string">不显示标志&quot;F&quot;列，显示&quot;RSS&quot;代替&quot;ADDR&quot;列(该命令只能与-l命令一起使用)</span></span><br><span class="line"><span class="attribute">-o</span><span class="punctuation"> :</span> <span class="string">指定用户定义的格式显示(ps -eo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,wchan:14,comm)</span></span><br><span class="line"><span class="attribute">-H</span><span class="punctuation"> :</span> <span class="string">显示进程层级关系</span></span><br><span class="line"><span class="attribute">-C&lt;命令&gt;</span><span class="punctuation"> :</span> <span class="string">显示出指定命令的程序</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">BSD风格 </span><span class="punctuation">:</span></span><br><span class="line"><span class="attribute">a</span><span class="punctuation"> :</span> <span class="string">显示现行终端机下的所有程序，包括其他用户的程序(通常与x选项搭配显示所有终端机所有用户的所有进程)</span></span><br><span class="line"><span class="attribute">x</span><span class="punctuation"> :</span> <span class="string">显示当前用户下所有程序，不以终端机区分</span></span><br><span class="line"><span class="attribute">T</span><span class="punctuation"> :</span> <span class="string">显示当前终端下所有相关程序</span></span><br><span class="line"><span class="attribute">r</span><span class="punctuation"> :</span> <span class="string">显示当前终端下运行的程序</span></span><br><span class="line"><span class="attribute">p</span><span class="punctuation"> :</span> <span class="string">通过空白符或逗号分割pid显示指定程序</span></span><br><span class="line"><span class="attribute">u</span><span class="punctuation"> :</span> <span class="string">以用户的形式展示</span></span><br><span class="line"><span class="attribute">v</span><span class="punctuation"> :</span> <span class="string">以虚拟内存的形式展示</span></span><br><span class="line"><span class="attribute">c</span><span class="punctuation"> :</span> <span class="string">展示真实的命令名称，这是从可执行文件中推导出来的，而不是从argv值中而来。</span></span><br><span class="line"><span class="attribute">e</span><span class="punctuation"> :</span> <span class="string">在command后面显示环境变量</span></span><br><span class="line"><span class="attribute">h</span><span class="punctuation"> :</span> <span class="string">不显示表头行</span></span><br><span class="line"><span class="attribute">f</span><span class="punctuation"> :</span> <span class="string">显示层次结构</span></span><br><span class="line"><span class="attribute">j</span><span class="punctuation"> :</span> <span class="string">显示作业控制格式化</span></span><br><span class="line"><span class="attribute">l</span><span class="punctuation"> :</span> <span class="string">显示长格式(与-l选项类似)</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">GNU风格 </span><span class="punctuation">:</span></span><br><span class="line"><span class="attribute">--no-headers</span><span class="punctuation"> :</span> <span class="string">不显示表头行</span></span><br><span class="line"><span class="attribute">--sort</span><span class="punctuation"> :</span> <span class="string">排序显示结果，通过+,-符号表示正序和倒序(ps --sort=uid,-ppid,+pid)</span></span><br></pre></td></tr></table></figure>
+<h4 id="状态说明"><a href="#状态说明" class="headerlink" title="状态说明"></a>状态说明</h4><ul>
+<li><p><strong>表头列名</strong></p>
+<ul>
+<li><code>F</code>   代表程序的标志</li>
+<li><code>S/STAT</code>  程序的状态</li>
+<li><code>UID/USER</code>　代表程序的拥有者</li>
+<li><code>PID</code>　代表程序的PID</li>
+<li><code>PPID</code>　代表程序的父程序的PID</li>
+<li><code>C/%CPU</code>　代表CPU的使用率(单位：百分比)   </li>
+<li><code>PRI/NI</code>　代表程序的执行优先级，数值越小表示越快被CPU执行</li>
+<li><code>ADDR</code>　代表程序在内存的哪个部分(“-“表示当前程序正在running)</li>
+<li><code>SZ</code>　代表程序用掉的内存</li>
+<li><code>WCHAN</code>　代表程序是否运行(“-“表示当前程序正在running)</li>
+<li><code>TTY</code>　代表登陆终端的位置</li>
+<li><code>TIME</code>　代表使用掉CPU的时间</li>
+<li><code>CMD/COMMAND</code> 代表程序触发的指令</li>
+<li><code>%MEM</code>　代表程序战胜的实体内存百分比</li>
+<li><code>VSZ</code>　代表程序使用掉的虚拟内存量(KBytes)</li>
+<li><code>RSS</code>　代表程序占用的固定内存量(KBytes)</li>
+<li><code>START</code>　代表程序触发启动的时间</li>
+<li><code>TIME</code>　代表程序实际使用CPU运行的时间</li>
+</ul>
+</li>
+<li><p><strong>进程标志(<code>F</code>列)</strong></p>
+<ul>
+<li><code>1</code>　分叉但不执行的的进程，表示此子程序仅进行复制(fork)，而没有实际执行(exec)</li>
+<li><code>4</code>　使用超级用户(root)权限的进程</li>
+</ul>
+</li>
+<li><p><strong>进程状态码(<code>STAT</code>或<code>S</code>列)</strong></p>
+<ul>
+<li><code>D</code>　不可被唤醒的睡眠状态(通常为等待IO)</li>
+<li><code>R</code>　正在运行或可运行(在运行队列上)</li>
+<li><code>S</code>　正在睡眠状态的，但可以被唤醒(等待事件完成)</li>
+<li><code>T</code>　作业信号停止(可能在工作控制背景暂停或除错状态)</li>
+<li><code>t</code>　在跟踪期间被调试器停止</li>
+<li><code>X</code>　死亡程序(不应该被看见)</li>
+<li><p><code>Z</code>　已终止的僵尸进程，但是其父程序却无法正常的终止它，造成 zombie (疆尸) 程序的状态</p>
+</li>
+<li><p><strong>对于BSD格式时<code>STAT</code>或<code>S</code>列可能还会有如下额外的字符显示：</strong></p>
+<ul>
+<li><code>&lt;</code>　高优先级</li>
+<li><code>N</code>　低优先级</li>
+<li><code>L</code>　已将pages锁定在内存中</li>
+<li><code>s</code>　会话的领导进程(会话是由其中的进程建立的)</li>
+<li><code>l</code>　多线程的</li>
+<li><code>+</code>　在前台进程中</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><strong>常用组合命令</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用UNIX风格参数查看所有进程</span></span><br><span class="line">ps -e</span><br><span class="line">ps -ef (常用)</span><br><span class="line">ps -eF</span><br><span class="line">ps -ely</span><br><span class="line"><span class="comment"># 使用BSD风格参数查看所有进程</span></span><br><span class="line">ps ax</span><br><span class="line">ps aux (常用)</span><br><span class="line"><span class="comment"># 查看进程树结构</span></span><br><span class="line">ps -ejH</span><br><span class="line">ps axjf (常用)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><code>ps -aux</code>、<code>ps aux</code>和<code>ps -ef</code>的区别</strong><br>POSIX和UNIX的标准要求”ps -aux”打印用户名为”x”的用户的所有进程，以及打印所有将由-a选项选择的过程。如果用户名为”x”不存在，ps的将会解释为”ps aux”，而且会打印一个警告。这种行为是为了帮助转换旧脚本和习惯。它是脆弱的，将来可能会改变，因此不应依赖。 </li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示用户名为windus的进程</span></span><br><span class="line">[Windus@study ~]$ ps -auwindus</span><br><span class="line">  PID TTY          TIME CMD</span><br><span class="line">22052 ?        00:00:00 sshd</span><br><span class="line">22053 pts/1    00:00:00 bash</span><br><span class="line">22431 pts/1    00:00:00 ps</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户abc不存在，所以抛出异常</span></span><br><span class="line">[Windus@study ~]$ ps -auabc</span><br><span class="line">error: user name does not exist</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示所有进程</span></span><br><span class="line">[windus@fcwalkers ~]$ ps aux</span><br><span class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span><br><span class="line">root         1  0.0  0.4 128092  4608 ?        Ss   16:06   0:03 /usr/lib/systemd/systemd --switched-</span><br><span class="line">root         2  0.0  0.0      0     0 ?        S    16:06   0:00 [kthreadd]</span><br><span class="line">……省略</span><br></pre></td></tr></table></figure>
+<p><code>-ef</code>和<code>aux</code>区别是一个是<code>UNIX</code>风格参数，一个是<code>BSD</code>风格参数。展示结果差异不大，主要区别是前者不会截断<code>COMMAND</code>列，后者会截断。</p>
+<h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><ul>
+<li><strong><code>Linux</code>的三种参数风格</strong></li>
+</ul>
+<hr>
+<blockquote>
+<ul>
+<li><code>UNIX</code>风格的参数,前面加单破折线</li>
+<li><code>BSD</code>风格的参数,前面不加破折线</li>
+<li><code>GNU</code>风格的长参数,前面加双破折线</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong><code>Priority</code>与<code>Nice</code></strong></li>
+</ul>
+<hr>
+<p><code>Priority(PRI)</code>，是<code>Linux</code>系统程序优先执行顺序的值。<em>这个值越低代表越优先，但要注意的是这个值是由系统核心动态调整的，使用者无法直接调整。</em><br><code>Nice(NI)</code>，由于使用者无限干涉<code>PRI</code>的大小，所以当需要调整程序优先级时就需要通过设置<code>Nice</code>值来调整，PRI与NI的关系如下：<br>$$PRI_新 = PRI_旧 + NI $$</p>
+<p><strong>NI值特点：</strong></p>
+<blockquote>
+<ul>
+<li>root用户可以随意调整自己或他人用户程序的<code>Nice</code>值，且调整范围为<code>-20~19</code></li>
+<li>一般用户仅可调整自己的程序<code>Nice</code>值，且调整范围为<code>0~19</code>(避免一般用户抢占系统资源)</li>
+<li>一般用户仅可将<code>Nice</code>值越调越高，如原本为5调整为10</li>
+</ul>
+</blockquote>
+<p><strong>调整<code>Nice</code>值的方法：</strong></p>
+<blockquote>
+<ul>
+<li>一开始执行程序立即调整程序的<code>Nice</code>值，使用<code>nice</code>命令。</li>
+<li>调整某个存在的<code>pid</code>的<code>Nice</code>值，使用<code>renice</code>命令。</li>
+</ul>
+</blockquote>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E8%AF%B4%E6%98%8E"><span class="toc-text">状态说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-text">扩展</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E8%A7%82%E5%AF%9F/"><i class="fa fa-tags"></i>观察</a>
+     
+      <a href="/tags/%E7%A8%8B%E5%BA%8F/"><i class="fa fa-tags"></i>程序</a>
+     
+      <a href="/tags/%E8%BF%9B%E7%A8%8B/"><i class="fa fa-tags"></i>进程</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/grep%E5%91%BD%E4%BB%A4_23.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/cat%E5%91%BD%E4%BB%A4_16.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

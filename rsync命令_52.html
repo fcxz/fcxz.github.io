@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>rsync 命令[52] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="文件,同步,远程同步," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2022-07-25
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    rsync 命令[52]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><code>rsync</code>是一个支持本地与远程计算机之间文件同步的工具，也支持两个本地目录间文件同步。默认使用“快速检查”算法查找文件大小或者上次修改时间被改变的文件进行传输。它支持</p>
+</blockquote>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p>有两种方式通过<code>rsync</code>与远程系统联系，一是使用一个远程的<code>shell</code>程序（如<code>ssh</code>或<code>rsh</code>），另一种方法是直接通过<code>TCP</code>连接一个<code>rsync</code>守护进程。远程<code>shell</code>通过<code>:</code>符号分割本地和远程地址，守护进程通过<code>::</code>符号分割或者使用<code>rsync://</code>方式。</p>
+<p><strong>本地：</strong> <code>rsync [OPTION...] SRC... [DEST]</code></p>
+<p><strong>远程<code>shell</code>：</strong> </p>
+<ul>
+<li><p>Pull<br><code>rsync [OPTION...] [USER@]HOST:SRC... [DEST]</code></p>
+</li>
+<li><p>Push<br><code>rsync [OPTION...] SRC... [USER@]HOST:DEST</code></p>
+</li>
+</ul>
+<p><strong>守护进程：</strong></p>
+<ul>
+<li>Pull<br><code>rsync [OPTION...] [USER@]HOST::SRC... [DEST]</code><br><code>rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]</code></li>
+<li>Push<br><code>rsync [OPTION...] SRC... [USER@]HOST::DEST</code><br><code>rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST</code></li>
+</ul>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">-v : 显示传输信息（默认是无任何信息输出）（常用）</span><br><span class="line">-q : 减少信息输出，尤其是远程服务器信息</span><br><span class="line">-I : 不跳过文件大小和更新时间相同的文件（关闭“快速检查”算法，所有文件都传输）</span><br><span class="line">--size-only : 修改“快速检查”算法，仅考虑文件大小条件，不考虑文件时间是否被修改</span><br><span class="line">-a : 归档模式，表示希望递归并希望保留几乎所有内容的快速方式，相当于使用 &#x27;-rlptgoD&#x27; 选项（常用）</span><br><span class="line">-r : 递归复制文件夹</span><br><span class="line">-z : 对备份文件传输时压缩处理</span><br><span class="line">--compress-level=NUM : 文件压缩级别</span><br><span class="line">-R : 使用相对路径</span><br><span class="line">-b : 备份文件，如果目标路径已存在则会将旧文件重命名为 filename~ ，可以结合 --backup-dir 和 --suffix 选项使用</span><br><span class="line">--backup-dir=DIR : 将旧备份文件放在指定目录下</span><br><span class="line">--suffix=SUFFIX : 定义备份文件名的后缀</span><br><span class="line">-u : 跳过已经存在的文件，仅更新未存在的文件</span><br><span class="line">-l : 保留软链接</span><br><span class="line">-L : 当遇到软链接时，复制它们指向的文件。</span><br><span class="line">-H : 保留硬链接</span><br><span class="line">-p : 保留权限</span><br><span class="line">-o : 保留拥有者</span><br><span class="line">-g : 保留分组</span><br><span class="line">--remove-source-files : 删除 SRC 中的文件（不包括目录）</span><br><span class="line">--delete : 删除 DEST 中 SRC 不存在的文件</span><br><span class="line">--exclude=PATTERN : 排除不需要的文件</span><br><span class="line">--chown=USER:GROUP : 强制更改文件所有者和分组</span><br><span class="line">--timeout=TIMEOUT : 传输超时时间（默认 0，单位秒）</span><br></pre></td></tr></table></figure>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><p>本地同步</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 同步 public 目录下文件到 out 目录下，并且删除 out 目录中 public 里不存在的文件</span></span><br><span class="line">[root@study ~] rsync -azv --delete public/ out/</span><br></pre></td></tr></table></figure></li>
+<li><p>相对路径<code>-R</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 远程机器将创建一个 /tmp/foo/bar/baz.c 的文件</span></span><br><span class="line">[root@study ~] rsync -avR /foo/bar/baz.c /tmp/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 远程机器仅在 /tmp/ 目录创建一个 baz.c 文件</span></span><br><span class="line">[root@study ~] rsync -av /foo/bar/baz.c /tmp/</span><br></pre></td></tr></table></figure></li>
+<li><p>文件备份</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前目录下文件</span></span><br><span class="line">[root@study ~] <span class="built_in">ls</span> -l </span><br><span class="line">a.txt </span><br><span class="line">b.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 备份 a.txt 文件到 backup 目录，同时设置旧文件名前缀为 0725，旧文件路径为 older</span></span><br><span class="line">[root@study ~] rsync -b a.txt --suffix=0725 --backup-dir=older backup/</span><br><span class="line"><span class="comment"># 查看备份结果，因为第一次 backup 目录下没有文件所以 older 目录为空</span></span><br><span class="line">[root@study ~] <span class="built_in">ls</span> backup/ &amp;&amp; <span class="built_in">ls</span> backup/older</span><br><span class="line">a.txt</span><br><span class="line"><span class="comment"># 继续执行备份文件命令</span></span><br><span class="line">[root@study ~] rsync -b a.txt --suffix=0725 --backup-dir=older backup/</span><br><span class="line"><span class="comment"># 查看备份文件结果，因为第二次执行 backup 目录下已经存在目录，所以会将文件重命名后放入 older 目录</span></span><br><span class="line">[root@study ~] <span class="built_in">ls</span> backup/ &amp;&amp; <span class="built_in">ls</span> backup/older</span><br><span class="line">a.txt</span><br><span class="line">a.txt0725</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-text">语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E6%96%87%E4%BB%B6/"><i class="fa fa-tags"></i>文件</a>
+     
+      <a href="/tags/%E5%90%8C%E6%AD%A5/"><i class="fa fa-tags"></i>同步</a>
+     
+      <a href="/tags/%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5/"><i class="fa fa-tags"></i>远程同步</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/seq%E5%91%BD%E4%BB%A4_53.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/complete%E5%91%BD%E4%BB%A4_51.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>netstat命令[26] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="观察,网络," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-04-03
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    netstat命令[26]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><code>netstat</code>命令是一个监控TCP/IP网络的非常有用的工具，用于显示网络连接、路由表、接口状态、伪装连接和组播成员组等信息。</p>
+</blockquote>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-a : 列出系统上所有的连线、监听和<span class="type">Socket</span>数据。</span><br><span class="line">-t : 列出<span class="type">tcp</span>网络封包数据。</span><br><span class="line">-u : 列出<span class="type">udp</span>网络封包数据。</span><br><span class="line">-n : 以数字形式显示地址，而不是去解析主机、端口或用户名。</span><br><span class="line">-l : 列出目前正在网络监听的服务。</span><br><span class="line">-p : 列出该网络服务程序的<span class="type">PID</span>。</span><br><span class="line">-c : 使<span class="type">netstat</span>每秒输出一次。</span><br><span class="line">-e : 列出附加信息。</span><br><span class="line">-r : 显示路由表</span><br></pre></td></tr></table></figure>
+<h4 id="状态说明"><a href="#状态说明" class="headerlink" title="状态说明"></a>状态说明</h4><ul>
+<li><p><strong>活动的Internet网络连接 (<code>TCP</code>, <code>UDP</code>, <code>raw</code>)</strong></p>
+<ul>
+<li><code>Proto</code>网络封包协议。</li>
+<li><code>Recv-Q</code>连接此Socket的用户程序未拷贝的字节数。</li>
+<li><code>Send-Q</code>远程主机未确认的字节数。</li>
+<li><code>Local Address</code>Socket的本地地址(本地主机名)和端口号。除非给定<code>-n</code>选项，否则Socket地址按标准主机名(FQDN)进行解析，而端口号则转换到相应的服务名。</li>
+<li><code>Foreign Address</code>Socket的远程地址(远程主机名)和端口号。</li>
+<li><code>State</code>Socket的状态。因为在RAW协议中没有状态，而且UDP也不用状态信息，所以此行留空。通常它为以下几个值之一：<ul>
+<li><code>LISTEN</code>Socket监听进来的连接。如果不设置<code>-l</code>或者<code>-a</code>选项，将不显示出来这些连接。</li>
+<li><code>ESTABLISHED</code>Socket有一个有效连接。</li>
+<li><code>SYN_SENT</code>Socket尝试建立一个连接。</li>
+<li><code>SYN_RECV</code>从网络上收到一个连接请求。</li>
+<li><code>FIN_WAIT1</code>Socket已关闭，连接正在断开。</li>
+<li><code>FIN_WAIT2</code>连接已关闭，Socket等待远程方中止。</li>
+<li><code>TIME_WAIT</code>在关闭之后，Socket等待处理仍然在网络中的分组</li>
+<li><code>CLOSED</code>Socket未用。</li>
+<li><code>CLOSE_WAIT</code>远程方已关闭，等待Socket关闭。</li>
+<li><code>LAST_ACK</code>远程方中止，Socket已关闭。等待确认。</li>
+<li><code>CLOSING</code>Socket都已关闭，而还未把所有数据发出。</li>
+<li><code>UNKNOWN</code>Socket状态未知。</li>
+</ul>
+</li>
+<li><code>User</code>Socket所属的用户名或UID。</li>
+<li><code>PID/Program name</code>以斜线分隔的处理Socket程序的PID及进程名。<code>-p</code>选项可以使此栏目被显示。你需要超级管理员权限来查看不是你拥有的Socket的信息。对IPX Socket还无法获得此信息。</li>
+</ul>
+</li>
+<li><p><strong>活动的UNIX Socket</strong></p>
+<ul>
+<li><code>Proto</code>Socket所用的协议(通常是unix)。</li>
+<li><code>RefCnt</code>通过此Socket连接的进程数</li>
+<li><code>Flags</code>显示的标志为SO_ACCEPTON(显示为ACC),SO_WAITDATA(W)或SO_NOSPACE(N)。如果相应的进程等待一个连接请求，那么SO_ACCECPTON用于未连接的Socket。其它标志通常并不重要。</li>
+<li><code>Type</code>Socket使用的一些类型：<ul>
+<li><code>SOCK_DGRAM</code>此Socket用于数据报(无连接)模式。</li>
+<li><code>SOCK_STREAM</code>流模式(连接)Socket</li>
+<li><code>SOCK_RAW</code>此Socket用于RAW模式。</li>
+<li><code>SOCK_RDM</code>一种服务可靠性传递信息。</li>
+<li><code>SOCK_SEQPACKET</code>连续分组Socket。</li>
+<li><code>SOCK_PACKET</code>RAW接口使用Socket。</li>
+<li><code>UNKNOWN</code></li>
+</ul>
+</li>
+<li><code>State</code>此字段包含以下关键字之一：<ul>
+<li><code>FREE</code>Socket未分配。</li>
+<li><code>LISTENING</code>Socket正在监听一个连接请求。除非设置<code>-l</code>或者<code>-a</code>选项，否则不显示。</li>
+<li><code>CONNECTING</code>Socket正要建立连接。</li>
+<li><code>CONNECTED</code>Socket已连接。</li>
+<li><code>DISCONNECTING</code>Socket已断开。</li>
+<li><code>(empty)</code>Socket未连。</li>
+<li><code>UNKNOWN</code>这个状态不应该出现。</li>
+</ul>
+</li>
+<li><code>PID/Program name</code>处理此Socket的程序进程名和PID。上面关于活动的Internet网络连接的部分有更详细的信息。</li>
+<li><code>Path</code>连接到此Socket的相关程序路径。</li>
+</ul>
+</li>
+</ul>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><strong>一般用法</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示所有tcp封包数据监听中的网络连接</span></span><br><span class="line">[Windus@study ~]netstat -atnl</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State</span><br><span class="line">tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN</span><br><span class="line">tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN</span><br><span class="line">……省略</span><br></pre></td></tr></table></figure>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E8%AF%B4%E6%98%8E"><span class="toc-text">状态说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E8%A7%82%E5%AF%9F/"><i class="fa fa-tags"></i>观察</a>
+     
+      <a href="/tags/%E7%BD%91%E7%BB%9C/"><i class="fa fa-tags"></i>网络</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/free%E5%91%BD%E4%BB%A4_26.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/uname%E5%91%BD%E4%BB%A4_27.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="风尘" />
+  
+  
+  <title>find命令[21] | Linux命令手册 | 风尘</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="文件,磁盘,搜索," />
+  
+
+  
+  <meta name="description" content="Linux man">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"l8FqqNaIouygzrQ6vOYgAt5N-gzGzoHsz","appkey":"BiVeIjhmIynPJ0d5qhBjK4Q6","comment":false,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2019-03-22",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "风尘",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">MAN</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 一个逐渐完善中的Linux命令手册站点!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      <!-- 
+        <a href="https://github.com/WindusL" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+       -->
+      <!-- <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a> -->
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-03-26
+    </span>
+    
+    <!-- 
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+     -->
+  </div>
+  <h1 class="passage-title">
+    find命令[21]
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><code>find</code>命令用于查找指定目录下的文件，使用该命令时，不设置任何参数，则将在当前目录下查找子目录与文件，并且将查找到的子目录和文件全部进行显示。<code>find</code>命令是硬盘搜索，所以速度会相对很慢。</p>
+</blockquote>
+<h4 id="选项与参数："><a href="#选项与参数：" class="headerlink" title="选项与参数："></a>选项与参数：</h4><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. 与时间有关的选项：共有 -atime, -ctime 与 -mtime ，以 -mtime 说明</span><br><span class="line">    -mtime  n ：n 为数字，意义为在 n 天之前的“一天之内”被更动过内容的文件</span><br><span class="line">    -mtime +n ：列出在 n 天之前（不含 n 天本身）被更动过内容的文件文件名</span><br><span class="line">    -mtime -n ：列出在 n 天之内（含 n 天本身）被更动过内容的文件文件名</span><br><span class="line">    -newer <span class="keyword">file</span> ：<span class="keyword">file</span> 为一个存在的文件，列出比 <span class="keyword">file</span> 还要新的文件文件名 </span><br><span class="line"></span><br><span class="line"><span class="number">2</span>. 与使用者或群组名称有关的参数：</span><br><span class="line">    -uid n ：n 为数字，这个数字是使用者的帐号 ID，亦即 UID ，这个 UID 是记录在<span class="regexp">/etc/</span>passwd 里面与帐号名称对应的数字。</span><br><span class="line">    -gid n ：n 为数字，这个数字是群组名称的 ID，亦即 GID，这个 GID 记录在<span class="regexp">/etc/g</span>roup</span><br><span class="line">    -user name ：name 为使用者帐号名称！例如 dmtsai </span><br><span class="line">    -<span class="keyword">group</span> name：name 为群组名称喔，例如 users ；</span><br><span class="line">    -nouser    ：寻找文件的拥有者不存在 <span class="regexp">/etc/</span>passwd 的人！</span><br><span class="line">    -nogroup   ：寻找文件的拥有群组不存在于 <span class="regexp">/etc/g</span>roup 的文件！</span><br><span class="line">                当你自行安装软件时，很可能该软件的属性当中并没有文件拥有者，</span><br><span class="line">                这是可能的！在这个时候，就可以使用 -nouser 与 -nogroup 搜寻。</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>. 与文件权限及名称有关的参数：</span><br><span class="line">    -name filename ：搜寻文件名称为 filename 的文件；</span><br><span class="line">    -<span class="keyword">size</span> [+-]<span class="keyword">SIZE</span> ：搜寻比 <span class="keyword">SIZE</span> 还要大（+）或小（-）的文件。这个 <span class="keyword">SIZE</span> 的规格有：</span><br><span class="line">		  c: 代表 <span class="keyword">Byte</span>， </span><br><span class="line">		  k: 代表 <span class="number">1024</span>Bytes。</span><br><span class="line">		  所以，要找比<span class="number">50</span>KB还要大的文件，就是“ -<span class="keyword">size</span> +<span class="number">50</span>k”</span><br><span class="line">    -type TYPE ：搜寻文件的类型为 TYPE 的，</span><br><span class="line">        类型主要有：</span><br><span class="line">   		   一般正规文件（f）, </span><br><span class="line">   		   设备文件（b, c）,</span><br><span class="line">           目录（d）,</span><br><span class="line">     		   链接文件（l）, </span><br><span class="line">     		   socket（s）, </span><br><span class="line">     		   及 FIFO（p） 等属性。</span><br><span class="line">    -perm mode ：搜寻文件权限“刚好等于” mode 的文件，这个 mode 为类似 chmod的属性值，例如，-rwsr-xr-x 的属性为 <span class="number">4755</span> ！</span><br><span class="line">    -perm -mode ：搜寻文件权限“必须要全部囊括 mode 的权“限”的文件。</span><br><span class="line">    -perm /mode : 任何权限位 mode 被设置了的文件。</span><br><span class="line"></span><br><span class="line"><span class="number">4</span>. 额外可进行的动作：</span><br><span class="line">    -exec command ; ：command 为其他指令，-exec 后面可再接额外的指令来处理搜寻到的结果，&#123;&#125; 符号表示搜索到的文件名，然后要使用 \ 进行转义子防止符号意义被扩展，最后以 ; 结尾(见下面示例)。</span><br><span class="line">    -<span class="keyword">print</span> ：将结果打印到屏幕上，这个动作是默认动作！</span><br><span class="line"><span class="number">5</span>. 其他参数：</span><br><span class="line">    -inum n : 指定文件的 inode 号码 n（可使用 ls -i 查看 inode 号码）。</span><br><span class="line">    -<span class="keyword">delete</span> : 删除找到的文件。默认带有 -depth 选项深度删除。</span><br></pre></td></tr></table></figure>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><strong>一般用法</strong></li>
+</ul>
+<p><code>find [选项] [目标]</code></p>
+<ul>
+<li><strong>根据权限查询</strong></li>
+</ul>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">[</span><span class="comment">root@study ~</span><span class="title">]</span><span class="comment"># find /</span> <span class="literal">-</span><span class="comment">perm</span> <span class="literal">+</span><span class="comment">7000</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">#所谓的 7000 就是</span> <span class="literal">---</span><span class="comment">s</span><span class="literal">--</span><span class="comment">s</span><span class="literal">--</span><span class="comment">t ，那么只要含有 s 或 t 的就列出，所以当然要使用 /7000，</span></span><br><span class="line"><span class="comment">#使用</span> <span class="literal">-</span><span class="comment">7000 表示要同时含有</span> <span class="literal">---</span><span class="comment">s</span><span class="literal">--</span><span class="comment">s</span><span class="literal">--</span><span class="comment">t 的所有三个权限。而只需要任意一个，就是 /7000(旧版是：</span><span class="literal">-</span><span class="comment">perm</span> <span class="literal">+</span><span class="comment">7000已经被/7000替换)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><code>-exec</code>的使用</strong></li>
+</ul>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# find / -name <span class="string">&quot;passwd&quot;</span> -<span class="keyword">exec</span> <span class="keyword">ls</span> -l &#123;&#125; \;</span><br><span class="line">#-<span class="keyword">exec</span> 后面不支持别名所以上面使用 <span class="keyword">ls</span> -l  ;&#123;&#125; 代表的是“由find找到的内容</span><br></pre></td></tr></table></figure>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E4%B8%8E%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-text">选项与参数：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li></ol>
+  </div>
+</aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E6%96%87%E4%BB%B6/"><i class="fa fa-tags"></i>文件</a>
+     
+      <a href="/tags/%E7%A3%81%E7%9B%98/"><i class="fa fa-tags"></i>磁盘</a>
+     
+      <a href="/tags/%E6%90%9C%E7%B4%A2/"><i class="fa fa-tags"></i>搜索</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/" target="_blank">风尘</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">学习系列</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.fcwalkers.com/study/" target="_blank">风尘笔记</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">联系我</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://github.com/WindusL" target="_blank">Git Hub</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://weibo.com/876069696" target="_blank">微博</a>
+          </span>
+        
+      </div>
+    
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: admin@fcwalekrs.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>,共收录54条命令
+    </div>
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a8ae0f749fe958399dcd627b158a130c";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+	<!--
+    <a href="/cp%E5%91%BD%E4%BB%A4_15.html" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/locate%E5%91%BD%E4%BB%A4_20.html" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+	-->
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>
